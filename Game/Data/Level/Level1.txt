@@ -1,0 +1,136 @@
+#Peter Pepper level1
+#This file layout is base on the .obj file format.
+#List of platforms and their row and column
+#The platforms have to be made in  ascending order
+p 0 2
+p 0 3
+p 0 4
+p 0 5
+p 0 6
+p 0 7
+p 0 8
+p 0 9
+p 0 10
+p 2 2
+p 2 3
+p 2 4
+p 2 6
+p 2 7 
+p 2 8
+p 2 9
+p 2 10
+p 3 4 
+p 3 5
+p 3 6 
+p 4 2
+p 4 3
+p 4 4
+p 4 8
+p 4 9
+p 4 10
+p 5 4
+p 5 5
+p 5 6
+p 5 7
+p 5 8
+p 6 8
+p 6 9
+p 6 10
+p 7 2
+p 7 3
+p 7 4
+p 7 5
+p 7 6
+p 7 7
+p 7 8
+p 9 2
+p 9 3
+p 9 4
+p 9 5
+p 9 6
+p 9 7
+p 9 8
+p 9 9
+p 9 10
+
+#List of ladders and their row, column
+ld 0 2
+ld 0 4
+ld 0 5
+ld 0 6
+ld 0 8
+ld 0 10
+ld 1 2
+ld 1 4
+ld 1 5
+ld 1 6
+ld 1 8
+ld 1 10
+ld 2 3
+ld 2 4
+ld 2 5
+ld 2 6
+ld 2 7
+ld 2 8
+ld 2 10
+ld 3 3
+ld 3 4
+ld 3 6
+ld 3 7
+ld 3 8
+ld 3 10
+ld 4 2
+ld 4 3
+ld 4 4
+ld 4 6
+ld 4 7
+ld 4 8
+ld 4 9
+ld 5 2
+ld 5 3
+ld 5 4
+ld 5 6
+ld 5 7
+ld 5 8
+ld 5 9
+ld 6 2
+ld 6 3
+ld 6 4
+ld 6 6
+ld 6 7
+ld 6 8
+ld 6 9
+ld 6 10
+ld 7 2
+ld 7 4
+ld 7 6
+ld 7 8
+ld 7 9
+ld 7 10
+ld 8 2
+ld 8 4
+ld 8 6
+ld 8 8
+ld 8 9
+ld 8 10
+
+#Hamburger parts, row and column
+#they need the indexes of all the paltforms -> they can only spawn on big platforms, so the ones with uneven columns
+b 0 5 Top_bun
+b 0 7 Top_bun
+b 0 9 Top_bun
+b 2 3 Top_bun
+b 2 7 Cheese
+b 2 9 Tomato
+b 4 3 Lettuce
+b 4 9 Lettuce
+b 5 5 Lettuce
+b 5 7 Patty
+b 6 9 Patty
+#b 7 3 Patty
+b 7 5 Patty
+b 7 7 Lettuce
+b 9 3 Bottom_bun
+b 9 5 Bottom_bun
+b 9 7 Bottom_bun
+b 9 9 Bottom_bun

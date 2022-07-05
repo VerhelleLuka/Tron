@@ -1,0 +1,122 @@
+p 0 2
+p 0 3
+p 0 4
+p 0 5
+p 0 6
+p 0 7
+p 0 8
+p 0 9
+p 0 10
+p 1 2
+p 1 3
+p 1 4
+p 1 5
+p 1 6
+p 1 7
+p 1 8
+p 1 9
+p 1 10
+p 2 2
+p 2 3
+p 2 4
+p 2 5
+p 2 6
+p 2 7
+p 2 8
+p 3 2
+p 3 3
+p 3 4
+p 3 5
+p 3 6
+p 3 7
+p 3 8
+p 4 2
+p 4 3
+p 4 4
+p 4 5
+p 4 6
+p 4 7
+p 4 8
+p 4 9
+p 4 10
+p 5 2
+p 5 3
+p 5 4
+p 5 5
+p 5 6
+p 5 7
+p 5 8
+p 6 2
+p 6 3
+p 6 4
+p 6 5
+p 6 6
+p 6 7
+p 6 8
+p 7 2
+p 7 3
+p 7 4
+p 7 5
+p 7 6
+p 7 7
+p 7 8
+p 8 8
+p 8 9
+p 8 10
+p 11 2
+p 11 8
+p 11 9
+p 11 10
+ld 0 2
+ld 0 9
+ld 0 10
+ld 1 6
+ld 1 9
+ld 1 10
+ld 2 2
+ld 2 9 
+ld 2 10
+ld 3 2
+ld 3 8
+ld 3 9 
+ld 3 10
+ld 4 2
+ld 4 4
+ld 4 9
+ld 4 10
+ld 5 2
+ld 5 8
+ld 5 9
+ld 5 10
+ld 6 2
+ld 6 8
+ld 6 9
+ld 6 10
+ld 7 2 
+ld 7 9
+ld 7 10
+ld 8 2
+ld 8 8 
+ld 8 10
+ld 9 2
+ld 9 8
+ld 9 10
+ld 10 2
+ld 10 8
+ld 10 10
+b 0 5 Top_bun
+b 0 7 Top_bun
+b 1 5 Cheese
+b 1 7 Cheese
+b 2 5 Patty
+b 2 7 Patty
+b 3 5 Lettuce
+b 3 7 Tomato
+b 4 5 Bottom_bun
+b 4 7 Lettuce
+b 5 5 Tomato
+b 5 7 Cheese
+b 6 5 Patty
+b 6 7 Lettuce
+b 7 5 Bottom_bun
+b 7 7 Bottom_bun
