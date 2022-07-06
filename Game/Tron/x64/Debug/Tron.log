@@ -1,0 +1,10 @@
+﻿  GameManager.cpp
+C:\DAE_Local\Prog4\Tron\Game\Minigin\MiniginPCH.h(13,10): fatal error C1083: Cannot open include file: 'glm/glm.hpp': No such file or directory
+  LivesDisplayComponent.cpp
+C:\DAE_Local\Prog4\Tron\Game\Minigin\MiniginPCH.h(13,10): fatal error C1083: Cannot open include file: 'glm/glm.hpp': No such file or directory
+  Main.cpp
+C:\DAE_Local\Prog4\Tron\Game\Minigin\MiniginPCH.h(13,10): fatal error C1083: Cannot open include file: 'glm/glm.hpp': No such file or directory
+  PointsDisplayComponent.cpp
+C:\DAE_Local\Prog4\Tron\Game\Minigin\Transform.h(3,10): fatal error C1083: Cannot open include file: 'glm/glm.hpp': No such file or directory
+  Tron.cpp
+  Generating Code...
