@@ -1,4 +1,3 @@
-#include "MiniginPCH.h"
 #include "GameManager.h"
 #include "Tron.h"
 #include <string>
@@ -15,7 +14,8 @@ dae::GameManager::GameManager()
 	m_NrBurgers(0),
 	m_CompletedBurgers(0),
 	m_CurrentLevelIndex(0),
-	m_Lives(3)
+	m_Lives(3),
+	m_GameMode(GameMode::SINGLE)
 {
 }
 void dae::GameManager::SetTronGame(Tron* burgerTime)
@@ -44,23 +44,23 @@ void dae::GameManager::LoadLevel(const std::string& levelName)
 
 	if (levelName == "MainMenu")
 	{
-		m_pTron->LoadLevel1(m_GameMode, "MainMenu");
+		m_pTron->LoadLevel(m_GameMode, "MainMenu");
 	}
 	else if (levelName == "Same")
 	{
-		m_pTron->LoadLevel1(m_GameMode, SceneManager::GetInstance().GetActiveSceneName());
+		m_pTron->LoadLevel(m_GameMode, SceneManager::GetInstance().GetActiveSceneName());
 	}
 	else if (SceneManager::GetInstance().GetActiveSceneName() == "MainMenu")
 	{
-		m_pTron->LoadLevel1(m_GameMode, "Level1");
+		m_pTron->LoadLevel(m_GameMode, "Level1");
 	}
 	else if (SceneManager::GetInstance().GetActiveSceneName() == "Level1")
 	{
-		m_pTron->LoadLevel1(m_GameMode, "Level2");
+		m_pTron->LoadLevel(m_GameMode, "Level2");
 	}
 	else if (SceneManager::GetInstance().GetActiveSceneName() == "Level2")
 	{
-		m_pTron->LoadLevel1(m_GameMode, "Level3");
+		m_pTron->LoadLevel(m_GameMode, "Level3");
 	}
 	else if (SceneManager::GetInstance().GetActiveSceneName() == "Level3")
 	{

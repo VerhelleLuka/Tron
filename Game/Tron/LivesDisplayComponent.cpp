@@ -1,4 +1,3 @@
-#include "MiniginPCH.h"
 #include "LivesDisplayComponent.h"
 #include "TextComponent.h"
 #include "Subject.h"

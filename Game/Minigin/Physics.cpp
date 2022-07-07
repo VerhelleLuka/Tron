@@ -57,11 +57,13 @@ void dae::Physics::SetSceneNr(int sceneNr)
 }
 void dae::Physics::CheckOverlap()
 {
-	while ((size_t)m_SceneNr >= m_pRigidBodies.size())
-	{
-		--m_SceneNr;
-	}
+	//while ((size_t)m_SceneNr >= m_pRigidBodies.size())
+	//{
+	//	--m_SceneNr;
+	//}
 	//Overlap check for players/AI on ladders
+	if (m_pRigidBodies.size() < 1)
+		return;
 	for (size_t i{}; i < m_pRigidBodies[m_SceneNr].size(); ++i)
 	{
 		for (auto& rigidBody : m_pRigidBodies[m_SceneNr])

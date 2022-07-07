@@ -8,7 +8,7 @@
 namespace dae
 {
 
-	class BurgerTime;
+
 	class GameManager : public Singleton<GameManager>, public Subject
 	{
 	public:

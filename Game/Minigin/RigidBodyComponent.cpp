@@ -5,10 +5,7 @@
 #include "Physics.h"
 #include "Scene.h"
 #include "SceneManager.h"
-#include "../BurgerTime/PeterPepper.h"
-#include "../BurgerTime/PlatformComponent.h"
 #include "LadderComponent.h"
-#include "../BurgerTime/BurgerComponent.h"
 dae::RigidBodyComponent::RigidBodyComponent(float width, float height, bool isTrigger)
 	:m_Width(width),
 	m_Height(height),
