@@ -1,4 +1,9 @@
 ﻿  GameManager.cpp
+  LivesDisplayComponent.cpp
+  Main.cpp
+  PointsDisplayComponent.cpp
+  Tron.cpp
+  Generating Code...
   Tron.vcxproj -> C:\DAE_Local\Prog4\Tron\Game\x64\Debug\Tron.exe
   C:\DAE_Local\Prog4\Tron\Game\3rdParty\SDL2\lib\x64\SDL2.dll
   1 File(s) copied
