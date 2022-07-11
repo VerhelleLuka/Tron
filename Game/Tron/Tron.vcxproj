@@ -205,6 +205,7 @@ xcopy $(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll $(Outp
     <ClInclude Include="LivesDisplayComponent.h" />
     <ClInclude Include="PointsDisplayComponent.h" />
     <ClInclude Include="Tron.h" />
+    <ClInclude Include="TronStructs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

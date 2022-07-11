@@ -5,6 +5,7 @@
 #include "Subject.h"
 #include "Structs.h"
 #include "Tron.h"
+#include "TronStructs.h"
 namespace dae
 {
 
@@ -23,8 +24,6 @@ namespace dae
 		void SetTronGame(Tron* tron);
 		void LoadLevel( const std::string& levelName) ;
 
-		void SetNrOfBurgers(int nrBurgers) { m_NrBurgers = nrBurgers; }
-		void BurgerCompleted();
 
 		void SetGameMode(GameMode gameMode) { m_GameMode = gameMode; }
 		void ResetScene(bool fullReset);
@@ -41,8 +40,6 @@ namespace dae
 		int m_Lives;
 		Tron* m_pTron;
 		GameMode m_GameMode;
-		int m_NrBurgers;
-		int m_CompletedBurgers;
 		int m_CurrentLevelIndex;
 		
 	};

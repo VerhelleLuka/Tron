@@ -11,8 +11,6 @@
 dae::GameManager::GameManager()
 	: m_pTron(nullptr),
 	m_Points(0),
-	m_NrBurgers(0),
-	m_CompletedBurgers(0),
 	m_CurrentLevelIndex(0),
 	m_Lives(3),
 	m_GameMode(GameMode::SINGLE)
@@ -23,23 +21,9 @@ void dae::GameManager::SetTronGame(Tron* burgerTime)
 	m_pTron = burgerTime;
 }
 
-void dae::GameManager::BurgerCompleted()
-{
-	m_CompletedBurgers++;
-	if (m_CompletedBurgers >= m_NrBurgers &&  SceneManager::GetInstance().GetActiveScene().GetName() != "MainMenu")
-	{
-		m_CompletedBurgers = 0;
-		++m_CurrentLevelIndex;
-		std::shared_ptr<EventArgs> emptyArgs = std::make_shared<EventArgs>();
-		Notify(EventType::WIN, emptyArgs);
-		ClearObservers();
-	}
 
-}
-//
 void dae::GameManager::LoadLevel(const std::string& levelName)
 {
-	m_CompletedBurgers = 0;
 	SceneManager::GetInstance().GetActiveScene().MarkForDestroy();
 
 	if (levelName == "MainMenu")
@@ -109,5 +93,4 @@ void dae::GameManager::ResetScene(bool fullReset)
 		m_Points = 0;
 		LoadLevel("MainMenu");
 	}
-	m_CompletedBurgers = 0;
 }
