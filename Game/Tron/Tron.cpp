@@ -7,6 +7,8 @@
 #include <SpriteComponent.h>
 #include "Animation.h"
 #include "Scene.h"
+#include "InputManager.h"
+#include "TronCommand.h"
 void dae::Tron::Initialize()
 {
 	GameManager::GetInstance().SetTronGame(this);
@@ -19,10 +21,22 @@ void dae::Tron::LoadGame()
 	Physics::GetInstance().SetSceneNr(0);
 	//CreateMenu(menuScene);
 	ParseLevel(menuScene, 0, "Level1");
+	CreateTronAndHUD(menuScene, 0, 0);
 }
 
-void dae::Tron::CreateTronAndHUD(Scene& /*scene*/, int /*playerNr*/, bool /*andHUD*/) const
+void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/) const
 {
+	auto tronGo = std::make_shared<GameObject>();
+	auto playerComponent = std::make_shared<PlayerComponent>(false);
+
+	tronGo->AddComponent(playerComponent, "PlayerComp");
+	auto& input = InputManager::GetInstance();
+
+	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), 0);
+	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), 0);
+
+
+	scene.Add(tronGo);
 }
 
 std::vector<dae::Float2> dae::Tron::ParseLevel(Scene& scene, int sceneNr, const std::string& levelName) const

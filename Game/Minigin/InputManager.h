@@ -4,7 +4,7 @@
 #include "Command.h"
 #include <map>
 #include "Singleton.h"
-
+#include "Structs.h"
 namespace dae
 {
 	enum class KeyState
@@ -53,8 +53,8 @@ namespace dae
 		bool IsReleased(ControllerButton button, int playerIdx) const;
 		bool IsPressed(ControllerButton button, int playerIdx) const;
 		void AddCommand(ControllerButton button, Command* command, KeyState keyState, GameObject* pGameObject, int playerIdx);
-		//void SetPlayer(GameObject* pGo, int playerIdx);
 
+		Float2 GetRStickValues() const;
 		void Update();
 	};
 

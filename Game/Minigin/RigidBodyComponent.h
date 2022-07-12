@@ -49,6 +49,8 @@ namespace dae
 
 		void SetStatic(bool isStatic) { m_IsStatic = isStatic;}
 		bool GetStatic() const { return m_IsStatic; }
+
+		void SetVelocityPreservation(bool keepVelocity) { m_KeepVelocity = keepVelocity; }
 	protected:
 
 		virtual void Initialize(Scene& scene) override;
@@ -68,5 +70,6 @@ namespace dae
 		std::vector<RigidBodyComponent*> m_OverlappingBodies;
 
 		bool m_IsStatic;
+		bool m_KeepVelocity;
 	};
 }

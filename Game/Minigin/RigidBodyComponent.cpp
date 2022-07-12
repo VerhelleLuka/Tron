@@ -12,9 +12,9 @@ dae::RigidBodyComponent::RigidBodyComponent(float width, float height, bool isTr
 	m_IsTrigger(isTrigger),
 	m_OverlapEvent(),
 	m_PositionOffset(Float2{ 0.f,0.f })
-	, m_Direction(Float2{0.f, 0.f})
-	,m_LastDirection(Float2{0.f, 0.f})
-	,m_IsStatic(false)
+	, m_Direction(Float2{ 0.f, 0.f })
+	, m_LastDirection(Float2{ 0.f, 0.f })
+	, m_IsStatic(false)
 {
 	if (&SceneManager::GetInstance().GetActiveScene())
 	{
@@ -60,7 +60,9 @@ void dae::RigidBodyComponent::FixedUpdate(float elapsedSec)
 		m_pParent->SetTransform(m_pParent->GetTransform().GetPosition().x + m_Direction.x * elapsedSec,
 			m_pParent->GetTransform().GetPosition().y + m_Direction.y * elapsedSec,
 			m_pParent->GetTransform().GetPosition().z);
-		m_Direction = { 0.f,0.f };
+
+		if (!m_KeepVelocity)
+			m_Direction = { 0.f,0.f };
 	}
 
 }

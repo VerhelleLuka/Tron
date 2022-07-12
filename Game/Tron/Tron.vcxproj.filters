@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{870e48a0-3a11-48ab-adb7-913aa56d7071}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Patterns">
+      <UniqueIdentifier>{2e7294c9-a511-4e80-90aa-eff1e6be58a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -40,6 +43,9 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="PointsDisplayComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,6 +64,12 @@
     </ClInclude>
     <ClInclude Include="TronStructs.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TronCommand.h">
+      <Filter>Header Files\Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

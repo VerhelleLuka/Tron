@@ -58,7 +58,6 @@ public:
 			CopyMemory(&m_PreviousState[i], &m_CurrentState[i], sizeof(XINPUT_STATE));
 			ZeroMemory(&m_CurrentState[i], sizeof(XINPUT_STATE));
 			XInputGetState(i, &m_CurrentState[i]);
-
 		}
 		return true;
 	};
@@ -82,8 +81,10 @@ public:
 	{
 		return((m_CurrentState[playerIdx].Gamepad.wButtons & int(button)) != 0);
 	}
-
-
+	Float2 GetRStickValues()
+	{
+		return Float2{ static_cast<float>( m_CurrentState[0].Gamepad.sThumbRX),static_cast<float>(m_CurrentState[0].Gamepad.sThumbRY)};
+	}
 
 };
 dae::InputManager::InputManager()
@@ -97,7 +98,10 @@ dae::InputManager::~InputManager()
 	pImpl = nullptr;
 }
 
-
+dae::Float2 dae::InputManager::GetRStickValues() const
+{
+	return pImpl->GetRStickValues();
+}
 bool dae::InputManager::ProcessInput()
 {
 	return pImpl->ProcessInput();
