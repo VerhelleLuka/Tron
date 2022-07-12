@@ -35,6 +35,11 @@ namespace dae
 		void AddPoints(int points);
 		int GetPoints() const { return m_Points; }
 
+		void SetGridBlock(Float2 pos);
+		void SetGridBlock(int row, int column);
+		bool GetGridBlock(Float2 pos) const;
+
+		void ResetGrid();
 	private:
 		int m_Points;
 		int m_Lives;
@@ -42,6 +47,8 @@ namespace dae
 		GameMode m_GameMode;
 		int m_CurrentLevelIndex;
 
+		const int m_GridWidth = 25;
+		const int m_GridHeight = 15;
 		bool m_BlockGrid[25][15] = { false };
 		
 	};

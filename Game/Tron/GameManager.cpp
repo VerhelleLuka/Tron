@@ -15,22 +15,55 @@ dae::GameManager::GameManager()
 	m_Lives(3),
 	m_GameMode(GameMode::SINGLE)
 {
-	for (int i{}; i < 25; ++i)
+	for (int i{}; i < m_GridWidth; ++i)
 	{
 		m_BlockGrid[i][0] = true;
-		m_BlockGrid[i][14] = true;
+		m_BlockGrid[i][m_GridHeight -1] = true;
 	}
-	for (int i{}; i < 15; ++i)
+	for (int i{}; i < m_GridHeight; ++i)
 	{
 		m_BlockGrid[0][i] = true;
-		m_BlockGrid[24][i] = true;
+		m_BlockGrid[m_GridWidth -1][i] = true;
 	}
 }
 void dae::GameManager::SetTronGame(Tron* burgerTime)
 {
 	m_pTron = burgerTime;
 }
+void dae::GameManager::SetGridBlock(Float2 /*pos*/)
+{
 
+}
+void dae::GameManager::SetGridBlock(int row, int column)
+{
+	m_BlockGrid[column + 1][row + 1] = true;
+}
+bool dae::GameManager::GetGridBlock(Float2 pos) const
+{
+	int column = (int(pos.x) % 24);
+	int row = (int(pos.y ) % 24);
+	std::cout << column << " " << row << "\n";
+	std::cout << m_BlockGrid[column][row] << "\n";
+	return m_BlockGrid[column][row];
+}
+void dae::GameManager::ResetGrid()
+{
+	for (int i{ 0 }; i < m_GridWidth; i++)
+	{
+		for (int j{ 0 }; m_GridHeight; j++)
+			m_BlockGrid[i][j] = false;
+	}
+	for (int i{}; i < m_GridWidth; ++i)
+	{
+		m_BlockGrid[i][0] = true;
+		m_BlockGrid[i][m_GridHeight - 1] = true;
+	}
+	for (int i{}; i < m_GridHeight; ++i)
+	{
+		m_BlockGrid[0][i] = true;
+		m_BlockGrid[m_GridWidth - 1][i] = true;
+	}
+}
 
 void dae::GameManager::LoadLevel(const std::string& levelName)
 {

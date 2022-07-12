@@ -71,7 +71,6 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 
 		blockAnimation->SetTexture("Level/Ladder.png");
 		transform.SetPosition(i * blockWidth + 8, 40.f, 0.f);
-
 		blockSprite->AddAnimation(blockAnimation, "Block");
 		blockSprite->SetActiveAnimation("Block");
 		blockAnimation->SetScale((float)levelScale);
@@ -198,7 +197,7 @@ void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& 
 
 		blockAnimation->SetTexture("Level/Ladder.png");
 		transform.SetPosition(blocks[i].column * blockWidth + blockWidthOffset, blocks[i].row * blockWidth + blockHeightOffset, 0.f);
-
+		GameManager::GetInstance().SetGridBlock(blocks[i].column, blocks[i].row);
 		blockSprite->AddAnimation(blockAnimation, "Block");
 		blockSprite->SetActiveAnimation("Block");
 		blockAnimation->SetScale((float)levelScale);
@@ -215,10 +214,10 @@ void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& 
 
 		scene.Add(block);
 	}
+	GameManager::GetInstance().GetGridBlock(Float2{ 10.f,50.f });
 }
 void dae::Tron::Run()
 {
-
 	// tell the resource manager where he can find the game data
 	ResourceManager::GetInstance().Init("../Data/");
 	m_Minigin.Initialize();

@@ -33,8 +33,8 @@ void dae::BulletComponent::OnOverlap(RigidBodyComponent* other)
 		centerPointOther.x = other->GetParent()->GetTransform().GetPosition().x + (other->GetWidth() / 2.f);
 		centerPointOther.y = other->GetParent()->GetTransform().GetPosition().y - (other->GetHeight() / 2.f);
 		
-		float dX = centerPointOther.x - centerPoint.x;
-		float dY = centerPointOther.y - centerPoint.y;
+		float dX = centerPoint.x- centerPointOther.x  ;
+		float dY = centerPoint.y - centerPointOther.y ;
 
 		Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
 
