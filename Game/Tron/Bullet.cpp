@@ -41,12 +41,12 @@ void dae::BulletComponent::OnOverlap(RigidBodyComponent* other)
 		if (abs(dY) > abs(dX))
 		{
 			direction.y *= -1;
-			std::cout << "Y-reversed\n";
+			//std::cout << "Y-reversed\n";
 		}
 		else
 		{
 			direction.x *= -1;
-			std::cout << "X-reversed\n";
+			//std::cout << "X-reversed\n";
 
 		}
 		m_ChangedDir = true;
