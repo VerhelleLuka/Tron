@@ -3,6 +3,7 @@
 #include <SpriteComponent.h>
 #include "SceneManager.h"
 #include "Scene.h"
+#include "Bullet.h"
 dae::PlayerComponent::PlayerComponent(bool /*isEvil*/)
 	:m_AimDirection(0.f,0.f)
 {
@@ -14,7 +15,6 @@ dae::PlayerComponent::~PlayerComponent()
 
 void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
-	std::cout << m_AimDirection.x << " " << m_AimDirection.y << "\n";
 }
 void dae::PlayerComponent::Shoot()
 {
@@ -29,7 +29,7 @@ void dae::PlayerComponent::Shoot()
 
 	bullet->SetTag("Bullet");
 
-	bullet->AddComponent(bulletSprite, "BuletSprite");
+	bullet->AddComponent(bulletSprite, "BulletSprite");
 	
 	bulletAnimation->SetTexture("Hamburger/Cheese.png");
 
@@ -52,5 +52,14 @@ void dae::PlayerComponent::Shoot()
 		aimDir.x = 100.f;
 	}
 	pRigidBody->SetDirection(Float2{ aimDir.x * bulletSpeed, aimDir.y * -bulletSpeed });
+
+	auto bulletComp = std::make_shared<BulletComponent>();
+	bullet->AddComponent(bulletComp, "Bullet");
+	bulletComp->SetOverlapEvent();
 	SceneManager::GetInstance().GetActiveScene().Add(bullet);
+}
+
+void dae::PlayerComponent::OnOverlap(RigidBodyComponent* /*other*/)
+{
+
 }

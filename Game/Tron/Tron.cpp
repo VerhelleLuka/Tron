@@ -56,10 +56,10 @@ std::vector<dae::Float2> dae::Tron::ParseLevel(Scene& scene, int sceneNr, const 
 
 void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 {
-	int levelScale = 2;
+	float levelScale = 1.5f;
 	float blockWidth = 16.f * levelScale;
 	//Horizontal blocks top
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 26; ++i)
 	{
 		auto block = std::make_shared<GameObject>();
 		auto blockSprite = std::make_shared<SpriteComponent>();
@@ -70,7 +70,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		block->AddComponent(blockSprite, "BlockSprite");
 
 		blockAnimation->SetTexture("Level/Ladder.png");
-		transform.SetPosition(i * blockWidth, 50.f, 0.f);
+		transform.SetPosition(i * blockWidth + 8, 40.f, 0.f);
 
 		blockSprite->AddAnimation(blockAnimation, "Block");
 		blockSprite->SetActiveAnimation("Block");
@@ -89,7 +89,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		scene.Add(block);
 	}
 	//bottom
-		for (int i = 0; i < 20; ++i)
+		for (int i = 0; i < 26; ++i)
 	{
 		auto block = std::make_shared<GameObject>();
 		auto blockSprite = std::make_shared<SpriteComponent>();
@@ -100,7 +100,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		block->SetTag("Block");
 
 		blockAnimation->SetTexture("Level/Ladder.png");
-		transform.SetPosition(i * blockWidth, 450.f, 0.f);
+		transform.SetPosition(i * blockWidth + 8, 448.f, 0.f);
 
 		blockSprite->AddAnimation(blockAnimation, "Block");
 		blockSprite->SetActiveAnimation("Block");
@@ -119,7 +119,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		scene.Add(block);
 	}
 	//Vertical blocks left
-		for (int i = 0; i < 12; ++i)
+		for (int i = 0; i < 16; ++i)
 		{
 			auto block = std::make_shared<GameObject>();
 			auto blockSprite = std::make_shared<SpriteComponent>();
@@ -130,7 +130,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			block->SetTag("Block");
 
 			blockAnimation->SetTexture("Level/Ladder.png");
-			transform.SetPosition(0.f, (i+2) * blockWidth, 0.f);
+			transform.SetPosition(8.f, ((i+2) * blockWidth) + 16, 0.f);
 
 			blockSprite->AddAnimation(blockAnimation, "Block");
 			blockSprite->SetActiveAnimation("Block");
@@ -149,7 +149,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			scene.Add(block);
 		}
 		//right
-		for (int i = 0; i < 12; ++i)
+		for (int i = 0; i < 16; ++i)
 		{
 			auto block = std::make_shared<GameObject>();
 			auto blockSprite = std::make_shared<SpriteComponent>();
@@ -160,7 +160,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			block->AddComponent(blockSprite, "BlockSprite");
 
 			blockAnimation->SetTexture("Level/Ladder.png");
-			transform.SetPosition(608.f, (i + 2) * blockWidth, 0.f);
+			transform.SetPosition(608.f, (i + 2) * blockWidth + 16, 0.f);
 
 			blockSprite->AddAnimation(blockAnimation, "Block");
 			blockSprite->SetActiveAnimation("Block");
@@ -184,8 +184,8 @@ void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& 
 {
 	float levelScale = 1.5;
 	float blockWidth = 16.f * levelScale;
-	float blockWidthOffset = 32.f; // Offset with the level edges (which are at scale 2)
-	float blockHeightOffset = 82.f;//Offset with the level edges (which are offset 50 + their height = 50 + 32 = 82)
+	float blockWidthOffset = 32.f; // Offset with the level edges (which are at scale 1.5)
+	float blockHeightOffset = 62.f;//Offset with the level edges (which are offset 50 + their height = 50 + 12 = 62)
 	for (size_t i{}; i < blocks.size(); ++i)
 	{
 

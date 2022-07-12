@@ -23,8 +23,6 @@ namespace dae
 			Float2 direction{ cosf(angle), sinf(angle) };
 			if(!(abs(direction.x) < 0.0001 && abs(direction.y) < 0.0001))
 				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->SetAimDir(direction);
-
-			std::cout << direction.x << " " << direction.y << "\n";
 		}
 	};
 }

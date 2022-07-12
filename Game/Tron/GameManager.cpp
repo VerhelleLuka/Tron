@@ -15,6 +15,16 @@ dae::GameManager::GameManager()
 	m_Lives(3),
 	m_GameMode(GameMode::SINGLE)
 {
+	for (int i{}; i < 25; ++i)
+	{
+		m_BlockGrid[i][0] = true;
+		m_BlockGrid[i][14] = true;
+	}
+	for (int i{}; i < 15; ++i)
+	{
+		m_BlockGrid[0][i] = true;
+		m_BlockGrid[24][i] = true;
+	}
 }
 void dae::GameManager::SetTronGame(Tron* burgerTime)
 {

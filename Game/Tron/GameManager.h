@@ -41,6 +41,8 @@ namespace dae
 		Tron* m_pTron;
 		GameMode m_GameMode;
 		int m_CurrentLevelIndex;
+
+		bool m_BlockGrid[25][15] = { false };
 		
 	};
 }

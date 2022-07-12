@@ -19,6 +19,7 @@ namespace dae
 		virtual ~RigidBodyComponent() override;
 
 		void SetDirection(Float2 velocity);
+		Float2 GetDirection() const { return m_Direction; }
 
 		//All the getters for component overlap
 		bool GetTrigger() const { return m_IsTrigger; }
