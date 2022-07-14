@@ -5,6 +5,7 @@
 
 namespace dae
 {
+
 	class Shoot final : public Command
 	{
 	public:
@@ -23,6 +24,20 @@ namespace dae
 			Float2 direction{ cosf(angle), sinf(angle) };
 			if(!(abs(direction.x) < 0.0001 && abs(direction.y) < 0.0001))
 				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->SetAimDir(direction);
+		}
+	};
+
+	class Move final : public Command
+	{
+	private :
+		MovementDirection m_MovDir;
+
+	public:
+		Move(MovementDirection movementDirection): m_MovDir(movementDirection){}
+
+		void Execute() override
+		{
+			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Move(m_MovDir);
 		}
 	};
 }

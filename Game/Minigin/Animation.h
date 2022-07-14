@@ -30,6 +30,8 @@ namespace dae
 		int GetFrameNr() const { return m_CurrentFrame; }
 		void SetFrameNr(int frame) { m_CurrentFrame = frame; }
 		int GetNrFrames() const { return m_NrFrames; }
+
+		void SetFramesSec(float framesSec) { m_FramesSec = framesSec; }
 	private:
 
 		std::shared_ptr<Texture2D> m_pTexture;

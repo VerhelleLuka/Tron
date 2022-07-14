@@ -1,9 +1,9 @@
 #include "Bullet.h"
-
+#include "GameManager.h"
 dae::BulletComponent::BulletComponent()
 	:m_Bounces(5),
-	m_ChangeDirectionTimer(0.f),
-	m_ChangedDir(false)
+	m_BounceTimer(0.f),
+	m_Bounced(false)
 {
 
 }
@@ -12,44 +12,61 @@ dae::BulletComponent::~BulletComponent() {}
 
 void dae::BulletComponent::Update(float elapsedSec)
 {
-	if (m_ChangedDir)
+	if (!m_Bounced)
+		CheckBounce();
+	else
 	{
-		m_ChangeDirectionTimer += elapsedSec;
-		if (m_ChangeDirectionTimer >= m_ChangeDirectionTime)
+		m_BounceTimer += elapsedSec;
+		if (m_BounceTimer >= m_BounceTime)
 		{
-			m_ChangedDir = false;
-			m_ChangeDirectionTimer = 0.f;
+			m_BounceTimer = 0;
+			m_Bounced = false;
 		}
 	}
+
 }
-void dae::BulletComponent::OnOverlap(RigidBodyComponent* other)
+
+void dae::BulletComponent::CheckBounce()
 {
-	if (other->GetParent()->GetTag() == "Block" && !m_ChangedDir)
+	Float2 centerPoint = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
+	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
+	float halfHeight = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
+	centerPoint.x += halfWidth;
+	centerPoint.y -= halfHeight;
+	Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
+	auto& gameManager = GameManager::GetInstance();
+
+
+	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y }) ||
+		gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y }))
 	{
-		Float2 centerPoint = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
-		centerPoint.x += m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
-		centerPoint.y -= m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
-		Float2 centerPointOther{ 0.f,0.f };
-		centerPointOther.x = other->GetParent()->GetTransform().GetPosition().x + (other->GetWidth() / 2.f);
-		centerPointOther.y = other->GetParent()->GetTransform().GetPosition().y - (other->GetHeight() / 2.f);
-		
-		float dX = centerPoint.x- centerPointOther.x  ;
-		float dY = centerPoint.y - centerPointOther.y ;
-
-		Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
-
-		if (abs(dY) > abs(dX))
-		{
-			direction.y *= -1;
-			//std::cout << "Y-reversed\n";
-		}
-		else
-		{
-			direction.x *= -1;
-			//std::cout << "X-reversed\n";
-
-		}
-		m_ChangedDir = true;
-		m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetDirection(direction);
+		m_Bounced = true;
+		direction.x *= -1;
 	}
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight) }) ||
+		gameManager.GetGridBlock(Float2{ centerPoint.x, (centerPoint.y + halfHeight) }))
+
+	{
+		m_Bounced = true;
+		direction.y *= -1;
+	}
+	else
+	{
+		m_Bounced = false;
+	}
+	if (m_Bounced)
+	{
+		m_Bounces--;
+		if (m_Bounces < 1)
+			m_pParent->MarkForDelete();
+	}
+
+
+
+	m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetDirection(direction);
+
+}
+void dae::BulletComponent::OnOverlap(RigidBodyComponent* /*other*/)
+{
+
 }

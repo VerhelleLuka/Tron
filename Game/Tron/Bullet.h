@@ -24,10 +24,11 @@ namespace dae
 
 	private:
 		void OnOverlap(RigidBodyComponent* other);
+		void CheckBounce();
 		int m_Bounces;
 		
-		bool m_ChangedDir;
-		float m_ChangeDirectionTimer;
-		const float m_ChangeDirectionTime = 0.5f;
+		bool m_Bounced;
+		float m_BounceTimer;
+		const float m_BounceTime = 0.1f;
 	};
 }

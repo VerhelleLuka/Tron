@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
 #include "RigidBodyComponent.h"
+#include "TronStructs.h"
 namespace dae
 {
 	class PlayerComponent final : public BaseComponent
@@ -25,10 +26,13 @@ namespace dae
 		//Float2 GetAimDir() const { return m_AimDirection; }
 
 		void Shoot();
+
+		void Move(MovementDirection movDir) const;
 	private:
 
 		void OnOverlap(RigidBodyComponent* other);
 
 		Float2 m_AimDirection;
+		const float m_MoveSpeed = 100.f;
 	};
 }

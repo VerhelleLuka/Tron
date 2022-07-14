@@ -16,4 +16,11 @@ namespace dae
 			column = columnn;
 		}
 	};
+	enum class MovementDirection
+	{
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
+	};
 }

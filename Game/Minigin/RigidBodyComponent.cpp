@@ -15,6 +15,7 @@ dae::RigidBodyComponent::RigidBodyComponent(float width, float height, bool isTr
 	, m_Direction(Float2{ 0.f, 0.f })
 	, m_LastDirection(Float2{ 0.f, 0.f })
 	, m_IsStatic(false)
+	, m_KeepVelocity(false)
 {
 	if (&SceneManager::GetInstance().GetActiveScene())
 	{

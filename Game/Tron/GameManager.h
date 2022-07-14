@@ -47,9 +47,14 @@ namespace dae
 		GameMode m_GameMode;
 		int m_CurrentLevelIndex;
 
-		const int m_GridWidth = 25;
-		const int m_GridHeight = 15;
-		bool m_BlockGrid[25][15] = { false };
-		
+		const int m_GridWidth = 26;
+		const int m_GridHeight = 18;
+		bool m_BlockGrid[18][26] = { false };
+
+		const int m_WidthOffset = 8;
+		//const int m_MostRightBlock = 408;
+		const int m_HeightOffset = 0;
+		//const int m_LowestBlock = 448;
+		const float m_CellSize = 24.f;
 	};
 }

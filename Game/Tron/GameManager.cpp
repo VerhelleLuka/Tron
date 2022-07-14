@@ -15,15 +15,15 @@ dae::GameManager::GameManager()
 	m_Lives(3),
 	m_GameMode(GameMode::SINGLE)
 {
-	for (int i{}; i < m_GridWidth; ++i)
-	{
-		m_BlockGrid[i][0] = true;
-		m_BlockGrid[i][m_GridHeight -1] = true;
-	}
 	for (int i{}; i < m_GridHeight; ++i)
 	{
+		m_BlockGrid[i][0] = true;
+		m_BlockGrid[i][m_GridWidth -1] = true;
+	}
+	for (int i{}; i < m_GridWidth; ++i)
+	{
 		m_BlockGrid[0][i] = true;
-		m_BlockGrid[m_GridWidth -1][i] = true;
+		m_BlockGrid[m_GridHeight -1][i] = true;
 	}
 }
 void dae::GameManager::SetTronGame(Tron* burgerTime)
@@ -36,15 +36,15 @@ void dae::GameManager::SetGridBlock(Float2 /*pos*/)
 }
 void dae::GameManager::SetGridBlock(int row, int column)
 {
-	m_BlockGrid[column + 1][row + 1] = true;
+	m_BlockGrid[column][row] = true;
 }
 bool dae::GameManager::GetGridBlock(Float2 pos) const
 {
-	int column = (int(pos.x) % 24);
-	int row = (int(pos.y ) % 24);
-	std::cout << column << " " << row << "\n";
-	std::cout << m_BlockGrid[column][row] << "\n";
-	return m_BlockGrid[column][row];
+	int column = int((int(pos.x - m_WidthOffset) / m_CellSize));
+	int row = int((int(pos.y + m_HeightOffset) / m_CellSize));
+	//std::cout << column << " " << row << "\n";
+	std::cout << m_BlockGrid[row][column] << "\n";
+	return m_BlockGrid[row][column];
 }
 void dae::GameManager::ResetGrid()
 {

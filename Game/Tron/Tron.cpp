@@ -30,13 +30,74 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	auto playerComponent = std::make_shared<PlayerComponent>(false);
 
 	tronGo->AddComponent(playerComponent, "PlayerComp");
+
+
+	tronGo->SetTransform(300.f,150.f,0.f);
+
+	auto tronSprite = std::make_shared<SpriteComponent>();
+
+	float animationScale = 1.5f;
+	//Create animations 
+	// 	//Down
+	auto tronAnimationDown = std::make_shared<Animation>(3, 3);
+	tronAnimationDown->SetTexture("PeterPepper/ClimbDownSprite.png");
+	tronAnimationDown->SetScale(animationScale);
+	//Right
+	auto tronAnimationRight = std::make_shared<Animation>(3, 3);
+	tronAnimationRight->SetTexture("PeterPepper/LeftRightSprite.png");
+	tronAnimationRight->SetScale(animationScale);
+
+	//Left
+	auto tronAnimationLeft = std::make_shared<Animation>(3, 3);
+	tronAnimationLeft->SetTexture("PeterPepper/LeftRightSprite.png");
+	tronAnimationLeft->SetScale(animationScale);
+	//Up
+	auto tronAnimationUp = std::make_shared<Animation>(3, 3);
+	tronAnimationUp->SetTexture("PeterPepper/ClimbUpSprite.png");
+	tronAnimationUp->SetScale(animationScale);
+	//Idle
+	auto tronAnimationIdle = std::make_shared<Animation>(1, 1);
+	tronAnimationIdle->SetTexture("PeterPepper/IdleSprite.png");
+	tronAnimationIdle->SetScale(animationScale);
+	//Victory
+	auto tronAnimationVictory = std::make_shared<Animation>(2, 2);
+	tronAnimationVictory->SetTexture("PeterPepper/VictorySprite.png");
+	tronAnimationVictory->SetScale(animationScale);
+	//Death
+	auto tronAnimationDeath = std::make_shared<Animation>(5, 5);
+	tronAnimationDeath->SetTexture("PeterPepper/DeathSprite.png");
+	tronAnimationDeath->SetScale(animationScale);
+	//Add animation to sprite
+	tronSprite->AddAnimation(tronAnimationRight, "RunRight");
+	tronAnimationRight->SetReversed(true);
+	tronSprite->AddAnimation(tronAnimationLeft, "RunLeft");
+	tronSprite->AddAnimation(tronAnimationUp, "Climb");
+	tronSprite->AddAnimation(tronAnimationDown, "Descend");
+	tronSprite->AddAnimation(tronAnimationIdle, "Idle");
+	tronSprite->AddAnimation(tronAnimationVictory, "Victory");
+	tronSprite->AddAnimation(tronAnimationDeath, "Death");
+
+	tronSprite->SetGameObject(tronGo.get());
+	tronSprite->SetActiveAnimation("RunRight");
+
+	tronGo->AddComponent(tronSprite, "Sprite");
+
+	auto pRigidBody = std::make_shared<RigidBodyComponent>(tronSprite->GetAnimation().GetScaledWidth(),
+		tronSprite->GetAnimation().GetScaledHeight(),
+		true);
+	pRigidBody->SetGameObject(tronGo.get());
+	tronGo->AddComponent(pRigidBody, "RigidBody");
+	scene.Add(tronGo);
+
+
 	auto& input = InputManager::GetInstance();
 
 	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), 0);
 	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), 0);
-
-
-	scene.Add(tronGo);
+	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN),KeyState::DOWN, tronGo.get(), 0);
+	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT),KeyState::DOWN, tronGo.get(), 0);
+	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT),KeyState::DOWN, tronGo.get(), 0);
+	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP),KeyState::DOWN, tronGo.get(), 0);
 }
 
 std::vector<dae::Float2> dae::Tron::ParseLevel(Scene& scene, int sceneNr, const std::string& levelName) const
@@ -70,7 +131,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		block->AddComponent(blockSprite, "BlockSprite");
 
 		blockAnimation->SetTexture("Level/Ladder.png");
-		transform.SetPosition(i * blockWidth + 8, 40.f, 0.f);
+		transform.SetPosition(i * blockWidth + 8, 0.f, 0.f);
 		blockSprite->AddAnimation(blockAnimation, "Block");
 		blockSprite->SetActiveAnimation("Block");
 		blockAnimation->SetScale((float)levelScale);
@@ -99,7 +160,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		block->SetTag("Block");
 
 		blockAnimation->SetTexture("Level/Ladder.png");
-		transform.SetPosition(i * blockWidth + 8, 448.f, 0.f);
+		transform.SetPosition(i * blockWidth + 8, 408.f, 0.f);
 
 		blockSprite->AddAnimation(blockAnimation, "Block");
 		blockSprite->SetActiveAnimation("Block");
@@ -129,7 +190,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			block->SetTag("Block");
 
 			blockAnimation->SetTexture("Level/Ladder.png");
-			transform.SetPosition(8.f, ((i+2) * blockWidth) + 16, 0.f);
+			transform.SetPosition(8.f, ((i+1) * blockWidth), 0.f);
 
 			blockSprite->AddAnimation(blockAnimation, "Block");
 			blockSprite->SetActiveAnimation("Block");
@@ -159,7 +220,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			block->AddComponent(blockSprite, "BlockSprite");
 
 			blockAnimation->SetTexture("Level/Ladder.png");
-			transform.SetPosition(608.f, (i + 2) * blockWidth + 16, 0.f);
+			transform.SetPosition(608.f, (i + 1) * blockWidth, 0.f);
 
 			blockSprite->AddAnimation(blockAnimation, "Block");
 			blockSprite->SetActiveAnimation("Block");
@@ -183,8 +244,8 @@ void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& 
 {
 	float levelScale = 1.5;
 	float blockWidth = 16.f * levelScale;
-	float blockWidthOffset = 32.f; // Offset with the level edges (which are at scale 1.5)
-	float blockHeightOffset = 62.f;//Offset with the level edges (which are offset 50 + their height = 50 + 12 = 62)
+	float blockWidthOffset = 8.f; // Offset with the level edges (which are at scale 1.5)
+	float blockHeightOffset = 0.f;//Offset with the level edges (which are offset 50 + their height = 50 + 12 = 62)
 	for (size_t i{}; i < blocks.size(); ++i)
 	{
 
@@ -214,7 +275,7 @@ void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& 
 
 		scene.Add(block);
 	}
-	GameManager::GetInstance().GetGridBlock(Float2{ 10.f,50.f });
+	GameManager::GetInstance().GetGridBlock(Float2{ 30.f,50.f });
 }
 void dae::Tron::Run()
 {

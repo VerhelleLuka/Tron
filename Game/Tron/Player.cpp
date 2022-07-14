@@ -4,8 +4,10 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Bullet.h"
+#include "TronStructs.h"
+#include "GameManager.h"
 dae::PlayerComponent::PlayerComponent(bool /*isEvil*/)
-	:m_AimDirection(0.f,0.f)
+	:m_AimDirection(0.f, 0.f)
 {
 
 }
@@ -16,6 +18,61 @@ dae::PlayerComponent::~PlayerComponent()
 void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
 }
+
+void dae::PlayerComponent::Move(MovementDirection movDir) const
+{
+	float offset = 24.f;
+	Float2 centerPoint = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
+	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
+	float halfHeight = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
+	centerPoint.x += halfWidth;
+	centerPoint.y -= halfHeight;
+	Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
+	auto& gameManager = GameManager::GetInstance();
+
+
+	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y + offset}) && movDir == MovementDirection::LEFT)
+	{
+		return;
+	}
+	else if (gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y+offset }) && movDir == MovementDirection::RIGHT)
+	{
+		return;
+	}
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight + offset) }) && movDir == MovementDirection::UP)
+	{
+		return;
+	}
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y + halfHeight + offset ) }) && movDir == MovementDirection::DOWN)
+	{
+		return;
+	}
+
+
+
+	int x{ 0 }, y{ 0 };
+
+	switch (movDir)
+	{
+	case MovementDirection::DOWN:
+		y = 1;
+		break;
+	case MovementDirection::LEFT:
+		x = -1;
+		break;
+	case MovementDirection::RIGHT:
+		x = 1;
+		break;
+	case MovementDirection::UP:
+		y = -1;
+		break;
+	default:
+		break;
+	}
+
+	m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetDirection(Float2{ m_MoveSpeed * x, m_MoveSpeed * y });
+
+}
 void dae::PlayerComponent::Shoot()
 {
 	auto bullet = std::make_shared<GameObject>();
@@ -23,14 +80,12 @@ void dae::PlayerComponent::Shoot()
 	auto bulletSprite = std::make_shared<SpriteComponent>();
 	auto bulletAnimation = std::make_shared<Animation>(1, 1);
 
-	Transform transform{};
-	transform.SetPosition(150, 150.f, 0.f);
-	bullet->SetTransform(transform);
+	bullet->SetTransform(m_pParent->GetTransform());
 
 	bullet->SetTag("Bullet");
 
 	bullet->AddComponent(bulletSprite, "BulletSprite");
-	
+
 	bulletAnimation->SetTexture("Hamburger/Cheese.png");
 
 	bulletSprite->AddAnimation(bulletAnimation, "Bullet");
