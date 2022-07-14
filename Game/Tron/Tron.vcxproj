@@ -200,6 +200,7 @@ xcopy $(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll $(Outp
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PointsDisplayComponent.cpp" />
+    <ClCompile Include="Teleporter.cpp" />
     <ClCompile Include="Tron.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +209,7 @@ xcopy $(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll $(Outp
     <ClInclude Include="LivesDisplayComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointsDisplayComponent.h" />
+    <ClInclude Include="Teleporter.h" />
     <ClInclude Include="Tron.h" />
     <ClInclude Include="TronCommand.h" />
     <ClInclude Include="TronStructs.h" />

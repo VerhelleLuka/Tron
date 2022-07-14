@@ -51,6 +51,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Teleporter.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tron.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Bullet.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleporter.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
