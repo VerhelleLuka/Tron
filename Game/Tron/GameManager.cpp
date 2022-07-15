@@ -43,7 +43,7 @@ bool dae::GameManager::GetGridBlock(Float2 pos) const
 	int column = int((int(pos.x - m_WidthOffset) / m_CellSize));
 	int row = int((int(pos.y + m_HeightOffset) / m_CellSize));
 	//std::cout << column << " " << row << "\n";
-	std::cout << m_BlockGrid[row][column] << "\n";
+	//std::cout << m_BlockGrid[row][column] << "\n";
 	return m_BlockGrid[row][column];
 }
 void dae::GameManager::ResetGrid()
