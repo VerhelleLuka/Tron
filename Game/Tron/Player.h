@@ -2,9 +2,10 @@
 #include "BaseComponent.h"
 #include "RigidBodyComponent.h"
 #include "TronStructs.h"
+#include "Subject.h"
 namespace dae
 {
-	class PlayerComponent final : public BaseComponent
+	class PlayerComponent final : public BaseComponent, public Subject
 	{
 	public:
 		virtual void Update(float deltaTime);
@@ -26,10 +27,16 @@ namespace dae
 		//Float2 GetAimDir() const { return m_AimDirection; }
 
 		void Shoot();
-
-		void Move(MovementDirection movDir) const;
+		void Die();
+		void Move(MovementDirection movDir) ;
 	private:
-
+		enum class PlayerState
+		{
+			Dead,
+			Win,
+			Alive
+		};
+		PlayerState m_PlayerState = PlayerState::Alive;
 		void OnOverlap(RigidBodyComponent* other);
 
 		Float2 m_AimDirection;

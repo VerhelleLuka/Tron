@@ -19,8 +19,41 @@ void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
 }
 
-void dae::PlayerComponent::Move(MovementDirection movDir) const
+void dae::PlayerComponent::Die()
 {
+	m_PlayerState = PlayerState::Dead;
+	std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
+	args->name = "Death";
+	Notify(EventType::LOSTLIFE, args);
+	Notify(EventType::STATECHANGED, args);
+}
+
+void dae::PlayerComponent::Move(MovementDirection movDir) 
+{
+	if (m_PlayerState == PlayerState::Dead || m_PlayerState == PlayerState::Win)
+		return;
+
+	std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
+	switch (movDir)
+	{
+
+	case MovementDirection::RIGHT:
+		args->name = "RunRight";
+		break;
+	case MovementDirection::LEFT:
+		args->name = "RunLeft";
+		break;
+	case MovementDirection::UP:
+		args->name = "Climb";
+		break;
+	case MovementDirection::DOWN:
+		args->name = "Descend";
+		break;
+	default:
+		args->name = "Idle";
+		break;
+	}
+	Notify(EventType::STATECHANGED, args);
 	float offset = 24.f;
 	Float2 centerPoint = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
 	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;

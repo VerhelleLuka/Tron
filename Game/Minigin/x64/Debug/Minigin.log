@@ -1,70 +1,12 @@
-﻿  MiniginPCH.cpp
-  imgui_impl_opengl2.cpp
-  imgui_impl_sdl.cpp
-  imgui.cpp
-  imgui_demo.cpp
-  imgui_draw.cpp
-  imgui_tables.cpp
-  imgui_widgets.cpp
-  Generating Code...
-  imgui_plot.cpp
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(15,49): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(26,46): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(87,21): warning C4244: 'initializing': conversion from 'const int' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(88,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(110,20): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(111,20): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(117,28): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(132,33): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(133,32): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(146,20): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(147,20): warning C4244: 'initializing': conversion from 'const float' to 'int', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(151,24): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(154,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(154,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(153,32): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(153,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(222,29): warning C4018: '<': signed/unsigned mismatch
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(238,33): warning C4018: '<': signed/unsigned mismatch
-C:\DAE_Local\Prog4\Tron\Game\3rdParty\imgui-master\imgui_plot.cpp(247,34): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  implot.cpp
-  implot_items.cpp
-  Generating Code...
-  Animation.cpp
-  Font.cpp
-  FpsComponent.cpp
-  GameObject.cpp
+﻿  GameObject.cpp
   InputManager.cpp
   Minigin.cpp
-  Observer.cpp
   Physics.cpp
-  Renderer.cpp
-  ResourceManager.cpp
   RigidBodyComponent.cpp
   Scene.cpp
   SceneManager.cpp
-  Sound.cpp
   SpriteComponent.cpp
   Subject.cpp
-  TextComponent.cpp
-  Texture2D.cpp
-  TextureComponent.cpp
-  Transform.cpp
-  Generating Code...
-  Compiling...
-  TrashTheCache.cpp
   Generating Code...
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in xinput.lib(XINPUT1_4.dll); second definition ignored
   Minigin.vcxproj -> C:\DAE_Local\Prog4\Tron\Game\x64\Debug\Minigin.lib

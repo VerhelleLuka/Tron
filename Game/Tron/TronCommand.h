@@ -40,4 +40,12 @@ namespace dae
 			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Move(m_MovDir);
 		}
 	};
+
+	class Die final : public Command
+	{
+		void Execute() override
+		{
+			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Die();
+		}
+	};
 }

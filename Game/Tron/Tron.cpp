@@ -78,7 +78,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	tronSprite->AddAnimation(tronAnimationIdle, "Idle");
 	tronSprite->AddAnimation(tronAnimationVictory, "Victory");
 	tronSprite->AddAnimation(tronAnimationDeath, "Death");
-
+	tronAnimationDeath->SetFramesSec(0.3f);
 	tronSprite->SetGameObject(tronGo.get());
 	tronSprite->SetActiveAnimation("RunRight");
 
@@ -91,6 +91,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	tronGo->AddComponent(pRigidBody, "RigidBody");
 	scene.Add(tronGo);
 
+	playerComponent->AddObserver(tronSprite.get());
 
 	auto& input = InputManager::GetInstance();
 
@@ -100,6 +101,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT),KeyState::DOWN, tronGo.get(), 0);
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT),KeyState::DOWN, tronGo.get(), 0);
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP),KeyState::DOWN, tronGo.get(), 0);
+	input.AddCommand(ControllerButton::ButtonX, new Die,KeyState::DOWN, tronGo.get(), 0);
 }
 void dae::Tron::CreateTeleporter(Scene& scene) const
 {
