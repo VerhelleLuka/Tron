@@ -34,7 +34,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	tronGo->AddComponent(playerComponent, "PlayerComp");
 
 
-	tronGo->SetTransform(300.f,150.f,0.f);
+	tronGo->SetTransform(300.f,145.f,0.f);
 
 	auto tronSprite = std::make_shared<SpriteComponent>();
 
@@ -101,7 +101,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT),KeyState::DOWN, tronGo.get(), 0);
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT),KeyState::DOWN, tronGo.get(), 0);
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP),KeyState::DOWN, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::ButtonX, new Die,KeyState::DOWN, tronGo.get(), 0);
+	input.AddCommand(ControllerButton::ButtonX, new Die,KeyState::PRESSED, tronGo.get(), 0);
 }
 void dae::Tron::CreateTeleporter(Scene& scene) const
 {
@@ -167,15 +167,6 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		blockAnimation->SetScale((float)levelScale);
 
 		block->SetTransform(transform);
-
-		//RigidBodyComponent
-		//auto pRigidBody = std::make_shared<RigidBodyComponent>(blockSprite->GetAnimation().GetScaledWidth(),
-		//	blockSprite->GetAnimation().GetScaledHeight(),
-		//	false);
-		//pRigidBody->SetGameObject(block.get());
-		//
-		//block->AddComponent(pRigidBody, "RigidBody");
-
 		scene.Add(block);
 	}
 	//bottom
@@ -197,15 +188,6 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		blockAnimation->SetScale((float)levelScale);
 
 		block->SetTransform(transform);
-
-		//RigidBodyComponent
-		//auto pRigidBody = std::make_shared<RigidBodyComponent>(blockSprite->GetAnimation().GetScaledWidth(),
-		//	blockSprite->GetAnimation().GetScaledHeight(),
-		//	false);
-		//pRigidBody->SetGameObject(block.get());
-
-		//block->AddComponent(pRigidBody, "RigidBody");
-
 		scene.Add(block);
 	}
 	//Vertical blocks left
@@ -227,15 +209,6 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			blockAnimation->SetScale((float)levelScale);
 
 			block->SetTransform(transform);
-
-			//RigidBodyComponent
-			//auto pRigidBody = std::make_shared<RigidBodyComponent>(blockSprite->GetAnimation().GetScaledWidth(),
-			//	blockSprite->GetAnimation().GetScaledHeight(),
-			//	false);
-			//pRigidBody->SetGameObject(block.get());
-
-			//block->AddComponent(pRigidBody, "RigidBody");
-
 			scene.Add(block);
 		}
 		//right
@@ -257,14 +230,6 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 			blockAnimation->SetScale((float)levelScale);
 
 			block->SetTransform(transform);
-
-			//RigidBodyComponent
-			//auto pRigidBody = std::make_shared<RigidBodyComponent>(blockSprite->GetAnimation().GetScaledWidth(),
-			//	blockSprite->GetAnimation().GetScaledHeight(),
-			//	false);
-			//pRigidBody->SetGameObject(block.get());
-
-			//block->AddComponent(pRigidBody, "RigidBody");
 
 			scene.Add(block);
 		}
@@ -294,15 +259,6 @@ void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& 
 		blockAnimation->SetScale((float)levelScale);
 
 		block->SetTransform(transform);
-
-		//RigidBodyComponent
-		//auto pRigidBody = std::make_shared<RigidBodyComponent>(blockSprite->GetAnimation().GetScaledWidth(),
-		//	blockSprite->GetAnimation().GetScaledHeight(),
-		//	false);
-		//pRigidBody->SetGameObject(block.get());
-
-		//block->AddComponent(pRigidBody, "RigidBody");
-
 		scene.Add(block);
 	}
 	GameManager::GetInstance().GetGridBlock(Float2{ 30.f,50.f });
