@@ -30,10 +30,17 @@ void dae::GameManager::SetTronGame(Tron* burgerTime)
 {
 	m_pTron = burgerTime;
 }
-void dae::GameManager::SetGridBlock(Float2 /*pos*/)
+void dae::GameManager::EnemyKilled()
 {
-
+	m_NrEnemies--;
+	if (m_NrEnemies <= 0)
+	{
+		m_NrEnemies = 0;
+		ResetGrid();
+		LoadLevel("Next");
+	}
 }
+
 void dae::GameManager::SetGridBlock(int row, int column)
 {
 	m_BlockGrid[column][row] = true;
@@ -48,20 +55,20 @@ bool dae::GameManager::GetGridBlock(Float2 pos) const
 }
 void dae::GameManager::ResetGrid()
 {
-	for (int i{ 0 }; i < m_GridWidth; i++)
+	for (int i{ 0 }; i < m_GridHeight; ++i)
 	{
-		for (int j{ 0 }; m_GridHeight; j++)
+		for (int j{ 0 };j <  m_GridWidth; ++j)
 			m_BlockGrid[i][j] = false;
-	}
-	for (int i{}; i < m_GridWidth; ++i)
-	{
-		m_BlockGrid[i][0] = true;
-		m_BlockGrid[i][m_GridHeight - 1] = true;
 	}
 	for (int i{}; i < m_GridHeight; ++i)
 	{
+		m_BlockGrid[i][0] = true;
+		m_BlockGrid[i][m_GridWidth - 1] = true;
+	}
+	for (int i{}; i < m_GridWidth; ++i)
+	{
 		m_BlockGrid[0][i] = true;
-		m_BlockGrid[m_GridWidth - 1][i] = true;
+		m_BlockGrid[m_GridHeight - 1][i] = true;
 	}
 }
 
@@ -69,6 +76,8 @@ void dae::GameManager::LoadLevel(const std::string& levelName)
 {
 	SceneManager::GetInstance().GetActiveScene().MarkForDestroy();
 
+	ResetGrid();
+	//Physics::GetInstance().DeleteScene(SceneManager::GetInstance().GetActiveSceneNr());
 	if (levelName == "MainMenu")
 	{
 		m_pTron->LoadLevel(m_GameMode, "MainMenu");
@@ -94,7 +103,6 @@ void dae::GameManager::LoadLevel(const std::string& levelName)
 		AddPoints(0);
 		ResetScene(true);
 	}
-
 	ReduceLife(true);
 	AddPoints(0);
 }

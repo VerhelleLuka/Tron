@@ -8,7 +8,7 @@ dae::TeleporterComponent::~TeleporterComponent()
 
 void dae::TeleporterComponent::OnOverlap(RigidBodyComponent* other)
 {
-	if (other->GetParent()->GetTag() == "Player")
+	if (other->GetParent()->GetTag() == "Player" || other->GetParent()->GetTag() == "Enemy")
 	{
 		int randomXPos = 0;
 		int randomYPos = 0;

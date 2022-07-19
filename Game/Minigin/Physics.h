@@ -16,7 +16,7 @@ namespace dae
 
 		void AddRigidBodyComponent(RigidBodyComponent* rigidBody);
 		void RemoveRigidBodyComponent(RigidBodyComponent* rigidBody);
-		bool FindRigidBodyComponent(RigidBodyComponent* rigidBody);
+		void CheckEmptyRigidBodies();
 		void FixedUpdate(float deltaTime);
 		void CheckOverlap();
 

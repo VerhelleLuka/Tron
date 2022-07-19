@@ -3,7 +3,8 @@
 dae::BulletComponent::BulletComponent()
 	:m_Bounces(5),
 	m_BounceTimer(0.f),
-	m_Bounced(false)
+	m_Bounced(false),
+	m_Destroy(false)
 {
 
 }
@@ -32,7 +33,7 @@ void dae::BulletComponent::CheckBounce()
 	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
 	float halfHeight = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
 	centerPoint.x += halfWidth;
-	centerPoint.y -= halfHeight;
+	centerPoint.y += halfHeight;
 	Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
 	auto& gameManager = GameManager::GetInstance();
 
@@ -54,19 +55,35 @@ void dae::BulletComponent::CheckBounce()
 	{
 		m_Bounced = false;
 	}
-	if (m_Bounced)
-	{
-		m_Bounces--;
-		if (m_Bounces < 1)
-			m_pParent->MarkForDelete();
-	}
-
-
-
 	m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetDirection(direction);
 
 }
-void dae::BulletComponent::OnOverlap(RigidBodyComponent* /*other*/)
+void dae::BulletComponent::FixedUpdate(float /*elapsedSec*/)
 {
+	if (m_Bounced)
+	{
+		m_Bounced = false;
+		m_Bounces--;
+		if (m_Bounces < 1)
+		{
+			std::cout << "Bullet mark for delete\n";
 
+			m_pParent->MarkForDelete();
+		}
+	}
+	if (m_Destroy)
+	{
+		std::cout << "Bullet mark for delete\n";
+
+		m_pParent->MarkForDelete();
+	}
+
+}
+
+void dae::BulletComponent::OnOverlap(RigidBodyComponent* other)
+{
+	if (other->GetParent()->GetTag() == "Enemy")
+	{
+		m_Destroy = true;
+	}
 }

@@ -1,40 +1,36 @@
 #pragma once
-#include "RigidBodyComponent.h"
-#include "BaseComponent.h"
-#include "EnemyState.h"
-#include "PeterPepper.h"
-#include "Scene.h"
-namespace dae
+#include "Enemy.h"
+#include "GameManager.h"
+#include "Bullet.h"
+
+dae::Enemy::Enemy(EnemyType enemyType)
+	:m_NrHits(3),
+	m_Dead(false)
 {
-	class LadderComponent;
-	enum class EnemyType
-	{
-		TANK,
-		RECOGNIZER
-	};
-	class Enemy final : public BaseComponent, public Subject
-	{
-	public:
-		virtual void Update(float /*deltaTime*/) override;
-		virtual void FixedUpdate(float /*deltaTime*/) override;
-		virtual void Render() const {};
-		void Initialize(Scene& scene) override;
-		Enemy(EnemyType type);
-		virtual ~Enemy() {};
-		Enemy(const Enemy& other) = delete;
-		Enemy(Enemy&& other) = delete;
-		Enemy& operator=(const Enemy& other) = delete;
-		Enemy& operator=(Enemy&& other) = delete;
+	m_MoveSpeed = 100;
+	if (enemyType == EnemyType::RECOGNIZER)
+		m_MoveSpeed = 200;
+}
 
+void dae::Enemy::FixedUpdate(float /* elapsedSec*/)
+{
+	if (m_Dead)
+	{
+		std::cout << "Enemy mark for delete\n";
+		GameManager::GetInstance().EnemyKilled();
+		m_pParent->MarkForDelete();
+	}
+}
 
-		void SetOverlapEvent()
+void dae::Enemy::OnOverlap(RigidBodyComponent* other)
+{
+	if (other->GetParent()->GetTag() == "Bullet")
+	{
+		m_NrHits--;
+
+		if (m_NrHits == 0)
 		{
-			auto bindIng = std::bind(&Enemy::OnOverlap, this, std::placeholders::_1);
-			m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetOnOverlapEvent(bindIng);
+			m_Dead = true;
 		}
-		void Kill();
-
-	private:
-		void OnOverlap(RigidBodyComponent* other);
-	};
+	}
 }

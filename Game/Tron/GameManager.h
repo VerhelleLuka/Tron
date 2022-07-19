@@ -35,14 +35,15 @@ namespace dae
 		void AddPoints(int points);
 		int GetPoints() const { return m_Points; }
 
-		void SetGridBlock(Float2 pos);
 		void SetGridBlock(int row, int column);
 		bool GetGridBlock(Float2 pos) const;
-
+		void AddEnemy() { ++m_NrEnemies; }
+		void EnemyKilled();
 		void ResetGrid();
 	private:
 		int m_Points;
 		int m_Lives;
+		int m_NrEnemies;
 		Tron* m_pTron;
 		GameMode m_GameMode;
 		int m_CurrentLevelIndex;
@@ -54,5 +55,7 @@ namespace dae
 		const int m_WidthOffset = 8;
 		const int m_HeightOffset = 0;
 		const float m_CellSize = 24.f;
+
+
 	};
 }

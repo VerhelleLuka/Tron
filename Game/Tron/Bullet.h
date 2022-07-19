@@ -7,7 +7,7 @@ namespace dae
 	{
 	public:
 		virtual void Update(float deltaTime);
-		virtual void FixedUpdate(float /*deltaTime*/) {};
+		virtual void FixedUpdate(float /*deltaTime*/) ;
 		virtual void Render() const {};
 
 		BulletComponent();
@@ -30,5 +30,7 @@ namespace dae
 		bool m_Bounced;
 		float m_BounceTimer;
 		const float m_BounceTime = 0.1f;
+		bool m_Destroy;
+
 	};
 }

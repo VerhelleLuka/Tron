@@ -13,7 +13,23 @@ void dae::Physics::FixedUpdate(float /*deltaTime*/)
 	{
 		m_SceneNr = 0;
 	}
+	CheckEmptyRigidBodies();
 	CheckOverlap();
+}
+
+void dae::Physics::CheckEmptyRigidBodies()
+{
+	for (size_t i{ 0 }; i < m_pRigidBodies.size(); ++i)
+	{
+		for (size_t j{ 0 }; j < m_pRigidBodies[i].size(); ++j)
+		{
+			if (m_pRigidBodies[i][j] == nullptr)
+			{
+				m_pRigidBodies[i].erase(std::remove(m_pRigidBodies[i].begin(), m_pRigidBodies[i].end(), m_pRigidBodies[i][j]), m_pRigidBodies[i].end());
+
+			}
+		}
+	}
 }
 void dae::Physics::AddRigidBodyComponent(RigidBodyComponent* rigidBody)
 {
@@ -57,10 +73,11 @@ void dae::Physics::SetSceneNr(int sceneNr)
 }
 void dae::Physics::CheckOverlap()
 {
-	//while ((size_t)m_SceneNr >= m_pRigidBodies.size())
-	//{
-	//	--m_SceneNr;
-	//}
+	
+	while ((size_t)m_SceneNr >= m_pRigidBodies.size())
+	{
+		--m_SceneNr;
+	}
 	//Overlap check for players/AI on ladders
 	if (m_pRigidBodies.size() < 1)
 		return;
@@ -68,23 +85,18 @@ void dae::Physics::CheckOverlap()
 	{
 		for (auto& rigidBody : m_pRigidBodies[m_SceneNr])
 		{
-			//if (i >= m_pRigidBodies[m_SceneNr].size())
+
+  			//if (i >= m_pRigidBodies[m_SceneNr].size())
 			//	break;
 			if (rigidBody != m_pRigidBodies[m_SceneNr][i])
 			{
 				//If at least one of the rigidbodies is a trigger
 				if (rigidBody->GetTrigger() || m_pRigidBodies[m_SceneNr][i]->GetTrigger())
 				{
-					//This is super specific code for PeterPepper/Enemy overlap with stairs
-
-					//Every sprite is 32 pixels wide (16px source *  2 scale)
-					//The overlap with the ladder should be the center of the ladder (16px) with,
-					//the utmost left position they should be able to climb up on is 10 and utmost right 22
-					//so
 					Float2 posA = { rigidBody->GetTransform().GetPosition().x ,
-						rigidBody->GetTransform().GetPosition().y };
+						rigidBody->GetTransform().GetPosition().y + rigidBody->GetOffset().y};
 					Float2 posB = { m_pRigidBodies[m_SceneNr][i]->GetTransform().GetPosition().x,
-						m_pRigidBodies[m_SceneNr][i]->GetTransform().GetPosition().y };
+						m_pRigidBodies[m_SceneNr][i]->GetTransform().GetPosition().y + m_pRigidBodies[m_SceneNr][i]->GetOffset().y};
 					//float widthA = rigidBody->GetWidth();
 					float widthB = m_pRigidBodies[m_SceneNr][i]->GetWidth();
 					float heightA = rigidBody->GetHeight();
@@ -94,7 +106,7 @@ void dae::Physics::CheckOverlap()
 
 					//check widths
 					bool isOverlapping = false;
-					if (posA.x <= posB.x + widthB && posA.x >= posB.x)
+					if (posA.x <= posB.x + widthB && posA.x >= posB.x && i < m_pRigidBodies[m_SceneNr].size())
 					{
 						//check heights
 						if (posA.y > posB.y + heightB || posB.y > posA.y + heightA)
@@ -103,17 +115,22 @@ void dae::Physics::CheckOverlap()
 						}
 						else
 						{
+							std::cout << m_pRigidBodies[m_SceneNr].size() << "\n";
+
 							isOverlapping = true;
 							if (m_pRigidBodies[m_SceneNr][i]->GetTrigger())
 							{
 								m_pRigidBodies[m_SceneNr][i]->AddOverlappingBody(rigidBody);
 								m_pRigidBodies[m_SceneNr][i]->OnOverlap(rigidBody);
 							}
+
 							if (rigidBody->GetTrigger())
 							{
 								rigidBody->AddOverlappingBody(m_pRigidBodies[m_SceneNr][i]);
 								rigidBody->OnOverlap(m_pRigidBodies[m_SceneNr][i]);
 							}
+
+
 						}
 					}
 					if (!isOverlapping)

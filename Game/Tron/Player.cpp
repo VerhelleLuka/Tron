@@ -113,7 +113,10 @@ void dae::PlayerComponent::Shoot()
 	auto bulletSprite = std::make_shared<SpriteComponent>();
 	auto bulletAnimation = std::make_shared<Animation>(1, 1);
 
-	bullet->SetTransform(m_pParent->GetTransform());
+	Transform transform = m_pParent->GetTransform();
+	transform.SetPosition(transform.GetPosition().x + 5, transform.GetPosition().y + 5, transform.GetPosition().z);
+
+	bullet->SetTransform(transform);
 
 	bullet->SetTag("Bullet");
 

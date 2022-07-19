@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "TronCommand.h"
 #include "Teleporter.h"
+#include "Enemy.h"
 void dae::Tron::Initialize()
 {
 	GameManager::GetInstance().SetTronGame(this);
@@ -17,13 +18,64 @@ void dae::Tron::Initialize()
 
 void dae::Tron::LoadGame()
 {
-	auto& menuScene = SceneManager::GetInstance().CreateScene("MainMenu");
+	auto& menuScene = SceneManager::GetInstance().CreateScene("Level1");
 	SceneManager::GetInstance().SetActiveScene(&menuScene);
 	Physics::GetInstance().SetSceneNr(0);
 	//CreateMenu(menuScene);
 	ParseLevel(menuScene, 0, "Level1");
 	CreateTronAndHUD(menuScene, 0, 0);
 	CreateTeleporter(menuScene);
+	MakeEnemy(menuScene);
+}
+
+void dae::Tron::MakeEnemy(Scene& scene) const
+{
+	const float animationScale = 1.5f;
+	auto enemyGo = std::make_shared<GameObject>();
+	enemyGo->SetTag("Enemy");
+	auto descendAnim = std::make_shared<Animation>(2, 2);
+	auto walkLeftAnim = std::make_shared<Animation>(2, 2);
+	auto climbAnim = std::make_shared<Animation>(2, 2);
+	auto walkRightAnim = std::make_shared<Animation>(2, 2);
+	auto deathAnim = std::make_shared<Animation>(4, 4);
+	auto enemySprite = std::make_shared<SpriteComponent>();
+	enemySprite->SetGameObject(enemyGo.get());
+	enemySprite->AddAnimation(climbAnim, "Climb");
+	enemySprite->AddAnimation(descendAnim, "Descend");
+	enemySprite->AddAnimation(walkRightAnim, "WalkRight");
+	enemySprite->AddAnimation(deathAnim, "Death");
+	enemySprite->AddAnimation(walkLeftAnim, "WalkLeft");
+	enemyGo->AddComponent(enemySprite, "EnemySprite");
+
+	climbAnim->SetScale(animationScale);
+	descendAnim->SetScale(animationScale);
+	walkLeftAnim->SetScale(animationScale);
+	walkRightAnim->SetReversed(true);
+	walkRightAnim->SetScale(animationScale);
+	deathAnim->SetScale(animationScale);
+
+	climbAnim->SetTexture("Enemies/Sausage_Climb.png");
+	descendAnim->SetTexture("Enemies/Sausage_Descend.png");
+	walkLeftAnim->SetTexture("Enemies/Sausage_Walk.png");
+	walkRightAnim->SetTexture("Enemies/Sausage_Walk.png");
+	deathAnim->SetTexture("Enemies/Sausage_Kill.png");
+
+	enemySprite->SetActiveAnimation("WalkRight");
+	auto pRigidBody = std::make_shared<RigidBodyComponent>(enemySprite->GetAnimation().GetScaledWidth(),
+		enemySprite->GetAnimation().GetScaledHeight(),
+		true);
+	enemyGo->AddComponent(pRigidBody, "RigidBody");
+
+	EnemyType enemyType = EnemyType::TANK;
+
+	auto enemy = std::make_shared<Enemy>(enemyType);
+	enemy->SetGameObject(enemyGo.get());
+	enemy->SetOverlapEvent();
+	enemyGo->AddComponent(enemy, "Enemy");
+	enemyGo->SetTransform(296.f, 191.f, 0.f);
+	scene.Add(enemyGo);
+
+	GameManager::GetInstance().AddEnemy();
 }
 
 void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/) const
@@ -277,7 +329,14 @@ void dae::Tron::Run()
 	//Cleanup();
 }
 
-void dae::Tron::LoadLevel(GameMode /*gameMode*/, const std::string& /*levelName*/) const
+void dae::Tron::LoadLevel(GameMode /*gameMode*/, const std::string& levelName) const
 {
-
+	auto& menuScene = SceneManager::GetInstance().CreateScene(levelName);
+	SceneManager::GetInstance().SetActiveScene(&menuScene);
+	Physics::GetInstance().SetSceneNr(0);
+	//CreateMenu(menuScene);
+	ParseLevel(menuScene, 0, levelName);
+	CreateTronAndHUD(menuScene, 0, 0);
+	CreateTeleporter(menuScene);
+	MakeEnemy(menuScene);
 }

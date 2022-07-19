@@ -21,7 +21,7 @@ namespace dae
 		void CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const;
 		void CreateTeleporter(Scene& scene) const;
 		//void CreateEvilPepper(Transform spawnPos, Scene& scene, int playerNr) const;
-		//void MakeEnemySpawner(std::vector<Float2> spawnPositions) const;
+		void MakeEnemy(Scene& scene) const;
 		//void CreateMenu(Scene& scene) const;
 		void CreateBlocks(Scene& scene, int sceneNr, std::vector<Block>& blocks) const;
 		void CreateFixedBlocks(Scene& scene, int sceneNr) const;
