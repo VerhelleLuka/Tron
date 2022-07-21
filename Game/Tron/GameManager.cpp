@@ -100,8 +100,8 @@ void dae::GameManager::LoadLevel(const std::string& levelName)
 	}
 	else if (SceneManager::GetInstance().GetActiveSceneName() == "Level3")
 	{
-		AddPoints(0);
-		ResetScene(true);
+		m_pTron->LoadLevel(m_GameMode, "Level1");
+
 	}
 	ReduceLife(true);
 	AddPoints(0);
@@ -121,6 +121,10 @@ void dae::GameManager::ReduceLife(bool isToRefresh)
 	--m_Lives;
 	std::shared_ptr<EventArgs> emptyArgs = std::make_shared<EventArgs>();
 	Notify(EventType::LOSTLIFE, emptyArgs);
+	if (m_Lives <= 0)
+	{
+		ResetScene(true);
+	}
 }
 void dae::GameManager::ResetScene(bool fullReset)
 {

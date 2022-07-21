@@ -16,7 +16,6 @@ void dae::Enemy::FixedUpdate(float /* elapsedSec*/)
 {
 	if (m_Dead)
 	{
-		std::cout << "Enemy mark for delete\n";
 		GameManager::GetInstance().EnemyKilled();
 		m_pParent->MarkForDelete();
 	}
@@ -28,7 +27,7 @@ void dae::Enemy::OnOverlap(RigidBodyComponent* other)
 	{
 		m_NrHits--;
 
-		if (m_NrHits == 0)
+		if (m_NrHits < 0)
 		{
 			m_Dead = true;
 		}

@@ -22,14 +22,14 @@ namespace dae
 		void CreateTeleporter(Scene& scene) const;
 		//void CreateEvilPepper(Transform spawnPos, Scene& scene, int playerNr) const;
 		void MakeEnemy(Scene& scene) const;
-		//void CreateMenu(Scene& scene) const;
+		void CreateMenu(Scene& scene) const;
 		void CreateBlocks(Scene& scene, int sceneNr, std::vector<Block>& blocks) const;
 		void CreateFixedBlocks(Scene& scene, int sceneNr) const;
-		//void CreateMenuButton(Scene& scene, Float2 position, GameMode gameMode, const std::string& text) const;
+		void CreateMenuButton(Scene& scene, Float2 position, GameMode gameMode, const std::string& text) const;
 		//std::vector<Float2> MakeLaddersAndPlatforms(Scene& scene, const std::vector<Ladder>& ladders, const std::vector<Platform>& platforms, int sceneNr)const;
 		//void MakeBurgers(Scene& scene, const std::vector<Burger>& burgers, int sceneNr) const;
 		//void MakeBurgerSpawner(std::vector<Float2> spawnPositions) const;
-		//void CreateHighScoreDisplay(Scene& scene) const;
+		void CreateHighScoreDisplay(Scene& scene) const;
 
 
 		Minigin m_Minigin;

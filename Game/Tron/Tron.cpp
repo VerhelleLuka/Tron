@@ -11,6 +11,9 @@
 #include "TronCommand.h"
 #include "Teleporter.h"
 #include "Enemy.h"
+#include <TextComponent.h>
+#include "ButtonComponent.h"
+#include <algorithm>
 void dae::Tron::Initialize()
 {
 	GameManager::GetInstance().SetTronGame(this);
@@ -18,14 +21,60 @@ void dae::Tron::Initialize()
 
 void dae::Tron::LoadGame()
 {
-	auto& menuScene = SceneManager::GetInstance().CreateScene("Level1");
+	auto& menuScene = SceneManager::GetInstance().CreateScene("MainMenu");
 	SceneManager::GetInstance().SetActiveScene(&menuScene);
 	Physics::GetInstance().SetSceneNr(0);
-	//CreateMenu(menuScene);
-	ParseLevel(menuScene, 0, "Level1");
-	CreateTronAndHUD(menuScene, 0, 0);
-	CreateTeleporter(menuScene);
-	MakeEnemy(menuScene);
+	CreateMenu(menuScene);
+	//ParseLevel(menuScene, 0, "Level1");
+}
+void dae::Tron::CreateHighScoreDisplay(Scene& scene) const
+{
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
+
+	std::ifstream file("../Data/Menu/HighScores.txt");
+	std::string sCommand;
+	std::vector<int> highScores;
+	if (file)
+	{
+		while (!file.eof())
+		{
+			file >> sCommand;
+			highScores.push_back(std::stoi(sCommand));
+		}
+		std::sort(highScores.begin(), highScores.end(), std::greater<int>());
+	}
+	Float2 position{ 400, 50 };
+	for (size_t i{}; i < highScores.size(); ++i)
+	{
+		if (i > 4)
+			break;
+
+		auto highScore = std::make_shared<GameObject>();
+		auto textComp = std::make_shared<TextComponent>(std::to_string(highScores[i]), font);
+		highScore->AddComponent(textComp, "Text");
+		textComp->SetPosition(position.x, position.y);
+		position.y += 30;
+		scene.Add(highScore);
+	}
+
+
+}
+void dae::Tron::CreateMenu(Scene& scene) const
+{
+	auto titleGo = std::make_shared<GameObject>();
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+
+	auto textComp = std::make_shared<TextComponent>("BURGER TIME!!!!!!!", font);
+	titleGo->AddComponent(textComp, "TextComp");
+	titleGo->GetTransform().SetPosition(50, 0, 0);
+	scene.Add(titleGo);
+	CreateTronAndHUD( scene, 0, false);
+
+	CreateMenuButton(scene, Float2{ 150, 100 }, GameMode::SINGLE, "SinglePlayer");
+	CreateMenuButton(scene, Float2{ 300, 150 }, GameMode::COOP, "Co-op");
+	CreateMenuButton(scene, Float2{ 150, 200 }, GameMode::VERSUS, "Versus");
+	CreateHighScoreDisplay(scene);
+
 }
 
 void dae::Tron::MakeEnemy(Scene& scene) const
@@ -78,13 +127,49 @@ void dae::Tron::MakeEnemy(Scene& scene) const
 	GameManager::GetInstance().AddEnemy();
 }
 
-void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/) const
+void dae::Tron::CreateMenuButton(Scene& scene, Float2 position, GameMode gameMode, const  std::string& text) const
+{
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
+	auto buttonGo = std::make_shared<GameObject>();
+	buttonGo->SetTag("Button");
+	auto buttonAnim = std::make_shared<Animation>(1, 1);
+	buttonAnim->SetTexture("Menu/Button.png");
+
+	auto buttonTextComp = std::make_shared<TextComponent>(text, font);
+	buttonGo->AddComponent(buttonTextComp, "TextComp");
+	buttonTextComp->SetGameObject(buttonGo.get());
+	buttonTextComp->SetPosition(position.x, position.y);
+
+	auto buttonSprite = std::make_shared<SpriteComponent>();
+	buttonSprite->SetGameObject(buttonGo.get());
+	buttonSprite->AddAnimation(buttonAnim, "button");
+	buttonSprite->SetActiveAnimation("button");
+	buttonGo->AddComponent(buttonSprite, "ButtonSprite");
+
+	auto buttonComp = std::make_shared<ButtonComponent>("Level1", gameMode);
+	buttonGo->AddComponent(buttonComp, "ButtonComp");
+
+	auto buttonRigidBody = std::make_shared<RigidBodyComponent>(buttonAnim->GetScaledWidth(), buttonAnim->GetScaledHeight(), false);
+	buttonGo->AddComponent(buttonRigidBody, "RigidBody");
+	//buttonRigidBody->SetGameObject(buttonGo.get());
+	auto sceneObjects = scene.GetSceneObjects();
+	for (size_t i = 0; i < sceneObjects.size(); ++i)
+	{
+		if (dynamic_cast<GameObject*>(sceneObjects[i].get())->GetComponent<PlayerComponent>("PlayerComp").get())
+		{
+			dynamic_cast<GameObject*>(sceneObjects[i].get())->GetComponent<PlayerComponent>("PlayerComp")->AddObserver(buttonComp.get());
+		}
+	}
+	buttonGo->SetTransform(position.x, position.y, -1);
+
+	scene.Add(buttonGo);
+}
+void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 {
 	auto tronGo = std::make_shared<GameObject>();
 	auto playerComponent = std::make_shared<PlayerComponent>(false);
 	tronGo->SetTag("Player");
 	tronGo->AddComponent(playerComponent, "PlayerComp");
-
 
 	tronGo->SetTransform(300.f,145.f,0.f);
 
@@ -142,18 +227,29 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int /*playerNr*/, bool /*andHUD*/
 	pRigidBody->SetGameObject(tronGo.get());
 	tronGo->AddComponent(pRigidBody, "RigidBody");
 	scene.Add(tronGo);
-
+	playerComponent->SetOverlapEvent();
+	playerComponent->SetOnTriggerExitEvent();
 	playerComponent->AddObserver(tronSprite.get());
 
 	auto& input = InputManager::GetInstance();
 
-	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN),KeyState::DOWN, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT),KeyState::DOWN, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT),KeyState::DOWN, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP),KeyState::DOWN, tronGo.get(), 0);
-	input.AddCommand(ControllerButton::ButtonX, new Die,KeyState::PRESSED, tronGo.get(), 0);
+
+	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN),KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT),KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT),KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP),KeyState::DOWN, tronGo.get(), playerNr);
+
+	if (!andHUD)
+	{
+		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr);
+
+	}
+	else
+	{
+		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr);
+		input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), playerNr);
+		input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr);
+	}
 }
 void dae::Tron::CreateTeleporter(Scene& scene) const
 {
@@ -331,12 +427,19 @@ void dae::Tron::Run()
 
 void dae::Tron::LoadLevel(GameMode /*gameMode*/, const std::string& levelName) const
 {
-	auto& menuScene = SceneManager::GetInstance().CreateScene(levelName);
-	SceneManager::GetInstance().SetActiveScene(&menuScene);
+	auto& newScene = SceneManager::GetInstance().CreateScene(levelName);
+	SceneManager::GetInstance().SetActiveScene(&newScene);
+	Physics::GetInstance().SetSceneNr(0);
+	if (levelName == "MainMenu")
+	{
+		CreateMenu(newScene);
+		return;
+	}
+	SceneManager::GetInstance().SetActiveScene(&newScene);
 	Physics::GetInstance().SetSceneNr(0);
 	//CreateMenu(menuScene);
-	ParseLevel(menuScene, 0, levelName);
-	CreateTronAndHUD(menuScene, 0, 0);
-	CreateTeleporter(menuScene);
-	MakeEnemy(menuScene);
+	ParseLevel(newScene, 0, levelName);
+	CreateTronAndHUD(newScene, 0, true);
+	CreateTeleporter(newScene);
+	MakeEnemy(newScene);
 }

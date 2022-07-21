@@ -115,7 +115,6 @@ void dae::Physics::CheckOverlap()
 						}
 						else
 						{
-							std::cout << m_pRigidBodies[m_SceneNr].size() << "\n";
 
 							isOverlapping = true;
 							if (m_pRigidBodies[m_SceneNr][i]->GetTrigger())

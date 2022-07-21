@@ -66,15 +66,11 @@ void dae::BulletComponent::FixedUpdate(float /*elapsedSec*/)
 		m_Bounces--;
 		if (m_Bounces < 1)
 		{
-			std::cout << "Bullet mark for delete\n";
-
 			m_pParent->MarkForDelete();
 		}
 	}
 	if (m_Destroy)
 	{
-		std::cout << "Bullet mark for delete\n";
-
 		m_pParent->MarkForDelete();
 	}
 

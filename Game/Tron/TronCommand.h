@@ -46,6 +46,18 @@ namespace dae
 		void Execute() override
 		{
 			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Die();
+			GameManager::GetInstance().ReduceLife(false);
+
+		}
+	};
+
+	class Select final : public Command
+	{
+	public:
+		void Execute() override
+		{
+			//if (SceneManager::GetInstance().GetActiveSceneName() == "MainMenu")
+				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->ButtonPress();
 		}
 	};
 }
