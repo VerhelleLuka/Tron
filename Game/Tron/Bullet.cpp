@@ -1,10 +1,11 @@
 #include "Bullet.h"
 #include "GameManager.h"
-dae::BulletComponent::BulletComponent()
+dae::BulletComponent::BulletComponent(bool isEvil)
 	:m_Bounces(5),
 	m_BounceTimer(0.f),
 	m_Bounced(false),
-	m_Destroy(false)
+	m_Destroy(false),
+	m_IsEvil(isEvil)
 {
 
 }

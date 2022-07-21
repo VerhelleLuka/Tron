@@ -10,7 +10,7 @@ namespace dae
 		virtual void FixedUpdate(float /*deltaTime*/) ;
 		virtual void Render() const {};
 
-		BulletComponent();
+		BulletComponent(bool isEvil);
 		virtual ~BulletComponent();
 		BulletComponent(const BulletComponent& other) = delete;
 		BulletComponent(BulletComponent&& other) = delete;
@@ -21,6 +21,7 @@ namespace dae
 			auto bindIng = std::bind(&BulletComponent::OnOverlap, this, std::placeholders::_1);
 			m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetOnOverlapEvent(bindIng);
 		}
+		bool GetEvil()const { return m_IsEvil; }
 
 	private:
 		void OnOverlap(RigidBodyComponent* other);
@@ -31,6 +32,7 @@ namespace dae
 		float m_BounceTimer;
 		const float m_BounceTime = 0.1f;
 		bool m_Destroy;
+		bool m_IsEvil;
 
 	};
 }

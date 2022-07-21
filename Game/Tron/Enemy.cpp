@@ -27,7 +27,7 @@ void dae::Enemy::OnOverlap(RigidBodyComponent* other)
 	{
 		m_NrHits--;
 
-		if (m_NrHits < 0)
+		if (m_NrHits < -1)
 		{
 			m_Dead = true;
 		}

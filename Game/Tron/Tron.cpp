@@ -170,7 +170,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 	const float animationScale = 1.75f;
 	auto evilTron = std::make_shared<GameObject>();
 	evilTron->SetTag("EvilTron");
-	std::shared_ptr<PlayerComponent> player = std::make_shared<PlayerComponent>();
+	std::shared_ptr<PlayerComponent> player = std::make_shared<PlayerComponent>(true);
 	auto climbAnim = std::make_shared<Animation>(2, 2);
 	climbAnim->SetTexture("Enemies/Sausage_Climb.png");
 	climbAnim->SetScale(animationScale);
@@ -245,7 +245,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 {
 	auto tronGo = std::make_shared<GameObject>();
-	auto playerComponent = std::make_shared<PlayerComponent>();
+	auto playerComponent = std::make_shared<PlayerComponent>(false);
 	tronGo->SetTag("Player");
 	tronGo->AddComponent(playerComponent, "PlayerComp");
 
@@ -315,7 +315,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr);
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, tronGo.get(), playerNr);
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr);
-
+	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr);
 	if (!andHUD)
 	{
 		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr);
@@ -325,7 +325,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	{
 		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr);
 		input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), playerNr);
-		input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr);
+
 	}
 }
 void dae::Tron::CreateTeleporter(Scene& scene) const
@@ -509,6 +509,7 @@ void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 	Physics::GetInstance().SetSceneNr(0);
 	if (levelName == "MainMenu")
 	{
+		InputManager().GetInstance().SetPlayer(nullptr, 1);
 		CreateMenu(newScene);
 		return;
 	}

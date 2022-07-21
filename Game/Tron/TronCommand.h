@@ -11,7 +11,10 @@ namespace dae
 	public:
 		void Execute() override
 		{
-			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Shoot();
+			if (m_pGameObject == nullptr)
+				return;
+			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
+				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Shoot();
 		}
 	};
 
@@ -19,25 +22,32 @@ namespace dae
 	{
 		void Execute() override
 		{
-			float angle = atan2f(InputManager::GetInstance().GetRStickValues().y, InputManager::GetInstance().GetRStickValues().x);
+			if (m_pGameObject == nullptr)
+				return;
+			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
+			{
+				float angle = atan2f(InputManager::GetInstance().GetRStickValues().y, InputManager::GetInstance().GetRStickValues().x);
 
-			Float2 direction{ cosf(angle), sinf(angle) };
-			if(!(abs(direction.x) < 0.0001 && abs(direction.y) < 0.0001))
-				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->SetAimDir(direction);
+				Float2 direction{ cosf(angle), sinf(angle) };
+				if (!(abs(direction.x) < 0.0001 && abs(direction.y) < 0.0001))
+					m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->SetAimDir(direction);
+			}
+
 		}
 	};
 
 	class Move final : public Command
 	{
-	private :
+	private:
 		MovementDirection m_MovDir;
 
 	public:
-		Move(MovementDirection movementDirection): m_MovDir(movementDirection){}
+		Move(MovementDirection movementDirection) : m_MovDir(movementDirection) {}
 
 		void Execute() override
 		{
-			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Move(m_MovDir);
+			if (m_pGameObject)
+				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Move(m_MovDir);
 		}
 	};
 
@@ -45,8 +55,14 @@ namespace dae
 	{
 		void Execute() override
 		{
-			m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Die();
-			GameManager::GetInstance().ReduceLife(false);
+			if (m_pGameObject == nullptr)
+				return;
+			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
+			{
+				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Die();
+				GameManager::GetInstance().ReduceLife(false);
+			}
+
 
 		}
 	};
@@ -56,7 +72,9 @@ namespace dae
 	public:
 		void Execute() override
 		{
-			//if (SceneManager::GetInstance().GetActiveSceneName() == "MainMenu")
+			if (m_pGameObject == nullptr)
+				return;
+			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
 				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->ButtonPress();
 		}
 	};

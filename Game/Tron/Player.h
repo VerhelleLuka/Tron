@@ -9,10 +9,10 @@ namespace dae
 	{
 	public:
 		virtual void Update(float deltaTime);
-		virtual void FixedUpdate(float /*deltaTime*/) {};
+		virtual void FixedUpdate(float deltaTime) ;
 		virtual void Render() const {};
 
-		PlayerComponent();
+		PlayerComponent(bool isEvil);
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
 		PlayerComponent(PlayerComponent&& other) = delete;
@@ -48,5 +48,8 @@ namespace dae
 		Float2 m_AimDirection;
 		const float m_MoveSpeed = 100.f;
 		bool m_OverlappingButton;
+		bool m_IsEvil;
+
+		int m_BulletHits;
 	};
 }

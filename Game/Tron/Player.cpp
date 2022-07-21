@@ -7,9 +7,11 @@
 #include "TronStructs.h"
 #include "GameManager.h"
 #include "ButtonComponent.h"
-dae::PlayerComponent::PlayerComponent()
+dae::PlayerComponent::PlayerComponent(bool isEvil)
 	:m_AimDirection(0.f, 0.f),
-	m_OverlappingButton(false)
+	m_OverlappingButton(false),
+	m_IsEvil(isEvil),
+	m_BulletHits(3)
 {
 
 }
@@ -19,8 +21,15 @@ dae::PlayerComponent::~PlayerComponent()
 
 void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
-}
 
+}
+void dae::PlayerComponent::FixedUpdate(float /*elapsedTime*/)
+{
+	if (m_BulletHits <= 0)
+	{
+		GameManager::GetInstance().LoadLevel("MainMenu");
+	}
+}
 void dae::PlayerComponent::Die()
 {
 	m_PlayerState = PlayerState::Dead;
@@ -146,7 +155,7 @@ void dae::PlayerComponent::Shoot()
 	}
 	pRigidBody->SetDirection(Float2{ aimDir.x * bulletSpeed, aimDir.y * -bulletSpeed });
 
-	auto bulletComp = std::make_shared<BulletComponent>();
+	auto bulletComp = std::make_shared<BulletComponent>(m_IsEvil);
 	bullet->AddComponent(bulletComp, "Bullet");
 	bulletComp->SetOverlapEvent();
 	SceneManager::GetInstance().GetActiveScene().Add(bullet);
@@ -159,6 +168,14 @@ void dae::PlayerComponent::OnOverlap(RigidBodyComponent* other)
 		other->GetParent()->GetComponent<ButtonComponent>("ButtonComp")->SetOverlapping(true);
 		m_OverlappingButton = true;
 		return;
+	}
+	if (other->GetParent()->GetTag() == "Bullet")
+	{
+		if (other->GetParent()->GetComponent<BulletComponent>("Bullet")->GetEvil() != m_IsEvil)
+		{
+			other->GetParent()->MarkForDelete();
+			--m_BulletHits;
+		}
 	}
 }
 
