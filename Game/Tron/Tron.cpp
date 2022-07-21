@@ -68,7 +68,7 @@ void dae::Tron::CreateMenu(Scene& scene) const
 	titleGo->AddComponent(textComp, "TextComp");
 	titleGo->GetTransform().SetPosition(50, 0, 0);
 	scene.Add(titleGo);
-	CreateTronAndHUD( scene, 0, false);
+	CreateTronAndHUD(scene, 0, false);
 
 	CreateMenuButton(scene, Float2{ 150, 100 }, GameMode::SINGLE, "SinglePlayer");
 	CreateMenuButton(scene, Float2{ 300, 150 }, GameMode::COOP, "Co-op");
@@ -164,14 +164,92 @@ void dae::Tron::CreateMenuButton(Scene& scene, Float2 position, GameMode gameMod
 
 	scene.Add(buttonGo);
 }
+
+void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
+{
+	const float animationScale = 1.75f;
+	auto evilTron = std::make_shared<GameObject>();
+	evilTron->SetTag("EvilTron");
+	std::shared_ptr<PlayerComponent> player = std::make_shared<PlayerComponent>();
+	auto climbAnim = std::make_shared<Animation>(2, 2);
+	climbAnim->SetTexture("Enemies/Sausage_Climb.png");
+	climbAnim->SetScale(animationScale);
+
+	auto descendAnim = std::make_shared<Animation>(2, 2);
+	descendAnim->SetTexture("Enemies/Sausage_Descend.png");
+	descendAnim->SetScale(animationScale);
+
+	auto walkLeftAnim = std::make_shared<Animation>(2, 2);
+	walkLeftAnim->SetTexture("Enemies/Sausage_Walk.png");
+	walkLeftAnim->SetScale(animationScale);
+
+	auto walkRightAnim = std::make_shared<Animation>(2, 2);
+	walkRightAnim->SetTexture("Enemies/Sausage_Walk.png");
+	walkRightAnim->SetScale(animationScale);
+	walkRightAnim->SetReversed(true);
+
+	auto deathAnim = std::make_shared<Animation>(4, 4);
+	deathAnim->SetTexture("Enemies/Sausage_Kill.png");
+	deathAnim->SetScale(animationScale);
+
+	auto stunAnim = std::make_shared<Animation>(2, 2);
+	stunAnim->SetTexture("Enemies/Sausage_Peppered.png");
+	stunAnim->SetScale(animationScale);
+
+	auto enemySprite = std::make_shared<SpriteComponent>();
+	enemySprite->SetGameObject(evilTron.get());
+	enemySprite->AddAnimation(climbAnim, "Climb");
+	enemySprite->AddAnimation(descendAnim, "Descend");
+	enemySprite->AddAnimation(walkRightAnim, "RunRight");
+	enemySprite->AddAnimation(deathAnim, "Death");
+	enemySprite->AddAnimation(walkLeftAnim, "RunLeft");
+	enemySprite->AddAnimation(stunAnim, "Stunned");
+	enemySprite->SetActiveAnimation("RunLeft");
+
+
+	//RigidbodyComponent
+	auto pRigidBody = std::make_shared<RigidBodyComponent>(enemySprite->GetAnimation().GetScaledWidth(),
+		enemySprite->GetAnimation().GetScaledHeight(),
+		true);
+
+
+
+	//Add everything to scene
+	evilTron->AddComponent(enemySprite, "Sprite");
+	player->SetGameObject(evilTron.get());
+	evilTron->AddComponent(player, "PlayerComp");
+
+	evilTron->AddComponent(pRigidBody, "RigidBody");
+
+
+	player->SetGameObject(evilTron.get());
+	player->SetOverlapEvent();
+	player->SetOnTriggerExitEvent();
+
+	player->AddObserver(enemySprite.get());
+	pRigidBody->SetOffset(Float2{ 0.f,-3.f });
+
+	auto& input = InputManager::GetInstance();
+	
+	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, evilTron.get(), playerNr);
+	evilTron->SetTransform(300, 8, 0);
+	input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, evilTron.get(), playerNr);
+
+	scene.Add(evilTron);
+}
 void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 {
 	auto tronGo = std::make_shared<GameObject>();
-	auto playerComponent = std::make_shared<PlayerComponent>(false);
+	auto playerComponent = std::make_shared<PlayerComponent>();
 	tronGo->SetTag("Player");
 	tronGo->AddComponent(playerComponent, "PlayerComp");
 
-	tronGo->SetTransform(300.f,145.f,0.f);
+	tronGo->SetTransform(300.f, 145.f, 0.f);
 
 	auto tronSprite = std::make_shared<SpriteComponent>();
 
@@ -224,7 +302,6 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	auto pRigidBody = std::make_shared<RigidBodyComponent>(tronSprite->GetAnimation().GetScaledWidth(),
 		tronSprite->GetAnimation().GetScaledHeight(),
 		true);
-	pRigidBody->SetGameObject(tronGo.get());
 	tronGo->AddComponent(pRigidBody, "RigidBody");
 	scene.Add(tronGo);
 	playerComponent->SetOverlapEvent();
@@ -234,10 +311,10 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	auto& input = InputManager::GetInstance();
 
 
-	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN),KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT),KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT),KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP),KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr);
 
 	if (!andHUD)
 	{
@@ -274,7 +351,7 @@ void dae::Tron::CreateTeleporter(Scene& scene) const
 		true);
 	pRigidBody->SetGameObject(tpGo.get());
 	tpGo->AddComponent(pRigidBody, "RigidBody");
-	tpGo->SetTransform(296.f, 191.f,0.f);
+	tpGo->SetTransform(296.f, 191.f, 0.f);
 	tp->SetOverlapEvent();
 	scene.Add(tpGo);
 }
@@ -318,7 +395,7 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		scene.Add(block);
 	}
 	//bottom
-		for (int i = 0; i < 26; ++i)
+	for (int i = 0; i < 26; ++i)
 	{
 		auto block = std::make_shared<GameObject>();
 		auto blockSprite = std::make_shared<SpriteComponent>();
@@ -339,48 +416,48 @@ void dae::Tron::CreateFixedBlocks(Scene& scene, int /*sceneNr*/) const
 		scene.Add(block);
 	}
 	//Vertical blocks left
-		for (int i = 0; i < 16; ++i)
-		{
-			auto block = std::make_shared<GameObject>();
-			auto blockSprite = std::make_shared<SpriteComponent>();
-			auto blockAnimation = std::make_shared<Animation>(1, 1);
-			Transform transform{};
+	for (int i = 0; i < 16; ++i)
+	{
+		auto block = std::make_shared<GameObject>();
+		auto blockSprite = std::make_shared<SpriteComponent>();
+		auto blockAnimation = std::make_shared<Animation>(1, 1);
+		Transform transform{};
 
-			block->AddComponent(blockSprite, "BlockSprite");
-			block->SetTag("Block");
+		block->AddComponent(blockSprite, "BlockSprite");
+		block->SetTag("Block");
 
-			blockAnimation->SetTexture("Level/Ladder.png");
-			transform.SetPosition(8.f, ((i+1) * blockWidth), 0.f);
+		blockAnimation->SetTexture("Level/Ladder.png");
+		transform.SetPosition(8.f, ((i + 1) * blockWidth), 0.f);
 
-			blockSprite->AddAnimation(blockAnimation, "Block");
-			blockSprite->SetActiveAnimation("Block");
-			blockAnimation->SetScale((float)levelScale);
+		blockSprite->AddAnimation(blockAnimation, "Block");
+		blockSprite->SetActiveAnimation("Block");
+		blockAnimation->SetScale((float)levelScale);
 
-			block->SetTransform(transform);
-			scene.Add(block);
-		}
-		//right
-		for (int i = 0; i < 16; ++i)
-		{
-			auto block = std::make_shared<GameObject>();
-			auto blockSprite = std::make_shared<SpriteComponent>();
-			auto blockAnimation = std::make_shared<Animation>(1, 1);
-			Transform transform{};
-			block->SetTag("Block");
+		block->SetTransform(transform);
+		scene.Add(block);
+	}
+	//right
+	for (int i = 0; i < 16; ++i)
+	{
+		auto block = std::make_shared<GameObject>();
+		auto blockSprite = std::make_shared<SpriteComponent>();
+		auto blockAnimation = std::make_shared<Animation>(1, 1);
+		Transform transform{};
+		block->SetTag("Block");
 
-			block->AddComponent(blockSprite, "BlockSprite");
+		block->AddComponent(blockSprite, "BlockSprite");
 
-			blockAnimation->SetTexture("Level/Ladder.png");
-			transform.SetPosition(608.f, (i + 1) * blockWidth, 0.f);
+		blockAnimation->SetTexture("Level/Ladder.png");
+		transform.SetPosition(608.f, (i + 1) * blockWidth, 0.f);
 
-			blockSprite->AddAnimation(blockAnimation, "Block");
-			blockSprite->SetActiveAnimation("Block");
-			blockAnimation->SetScale((float)levelScale);
+		blockSprite->AddAnimation(blockAnimation, "Block");
+		blockSprite->SetActiveAnimation("Block");
+		blockAnimation->SetScale((float)levelScale);
 
-			block->SetTransform(transform);
+		block->SetTransform(transform);
 
-			scene.Add(block);
-		}
+		scene.Add(block);
+	}
 }
 
 void dae::Tron::CreateBlocks(Scene& scene, int /*sceneNr*/, std::vector<Block>& blocks) const
@@ -425,7 +502,7 @@ void dae::Tron::Run()
 	//Cleanup();
 }
 
-void dae::Tron::LoadLevel(GameMode /*gameMode*/, const std::string& levelName) const
+void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 {
 	auto& newScene = SceneManager::GetInstance().CreateScene(levelName);
 	SceneManager::GetInstance().SetActiveScene(&newScene);
@@ -435,6 +512,8 @@ void dae::Tron::LoadLevel(GameMode /*gameMode*/, const std::string& levelName) c
 		CreateMenu(newScene);
 		return;
 	}
+
+
 	SceneManager::GetInstance().SetActiveScene(&newScene);
 	Physics::GetInstance().SetSceneNr(0);
 	//CreateMenu(menuScene);
@@ -442,4 +521,13 @@ void dae::Tron::LoadLevel(GameMode /*gameMode*/, const std::string& levelName) c
 	CreateTronAndHUD(newScene, 0, true);
 	CreateTeleporter(newScene);
 	MakeEnemy(newScene);
+
+	if (gameMode == GameMode::COOP)
+	{
+		CreateTronAndHUD(newScene, 1, true);
+	}
+	else if (gameMode == GameMode::VERSUS)
+	{
+		CreateEvilTron(newScene, 1);
+	}
 }

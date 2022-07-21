@@ -20,7 +20,7 @@ namespace dae
 		std::vector<Float2> ParseLevel(Scene& scene, int sceneNr, const std::string& levelName)const;
 		void CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const;
 		void CreateTeleporter(Scene& scene) const;
-		//void CreateEvilPepper(Transform spawnPos, Scene& scene, int playerNr) const;
+		void CreateEvilTron( Scene& scene, int playerNr) const;
 		void MakeEnemy(Scene& scene) const;
 		void CreateMenu(Scene& scene) const;
 		void CreateBlocks(Scene& scene, int sceneNr, std::vector<Block>& blocks) const;

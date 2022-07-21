@@ -12,7 +12,7 @@ namespace dae
 		virtual void FixedUpdate(float /*deltaTime*/) {};
 		virtual void Render() const {};
 
-		PlayerComponent(bool isEvil);
+		PlayerComponent();
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
 		PlayerComponent(PlayerComponent&& other) = delete;

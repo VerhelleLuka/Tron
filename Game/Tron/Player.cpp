@@ -7,7 +7,7 @@
 #include "TronStructs.h"
 #include "GameManager.h"
 #include "ButtonComponent.h"
-dae::PlayerComponent::PlayerComponent(bool /*isEvil*/)
+dae::PlayerComponent::PlayerComponent()
 	:m_AimDirection(0.f, 0.f),
 	m_OverlappingButton(false)
 {
@@ -19,7 +19,6 @@ dae::PlayerComponent::~PlayerComponent()
 
 void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
-	std::cout << m_OverlappingButton << "\n";
 }
 
 void dae::PlayerComponent::Die()
