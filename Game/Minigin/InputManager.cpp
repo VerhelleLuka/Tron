@@ -22,10 +22,11 @@ class dae::InputManager::Impl
 	//The assigned buttons for each player (it'd be better if it was an unordered_set but whatevs)
 
 	std::map<std::pair<std::pair<ControllerButton, unsigned char>, KeyState>, std::unique_ptr<Command>> m_ButtonCommands[NrOfPlayers];
+	bool m_UsingController;
 
 public:
 
-	Impl()
+	Impl() : m_UsingController(true)
 	{
 		for (int i{}; i < NrOfPlayers; ++i)
 		{
@@ -73,11 +74,11 @@ public:
 				GetLastError();
 			}
 		}
-		POINT mousePos{};
 
-		GetCursorPos(&mousePos);
-		if (&mousePos)
-			std::cout << mousePos.x << " " << mousePos.y << "\n";
+		//int x{}, y{};
+		//SDL_GetMouseState(&x, &y);
+
+		//	std::cout << x << " " << y << "\n";
 
 		return true;
 	};
@@ -140,6 +141,21 @@ public:
 	{
 		return Float2{ static_cast<float>(m_CurrentState[0].Gamepad.sThumbRX),static_cast<float>(m_CurrentState[0].Gamepad.sThumbRY) };
 	}
+	Float2 GetMousePos()
+	{
+		int x{}, y{};
+		SDL_GetMouseState(&x, &y);
+		return Float2{ static_cast<float>(x), static_cast<float>(y) };
+	}
+
+	bool GetControllerAim() const
+	{
+		return m_UsingController;
+	}
+	void SwitchAimDevice()
+	{
+		m_UsingController = !m_UsingController;
+	}
 
 };
 dae::InputManager::InputManager()
@@ -156,6 +172,11 @@ dae::InputManager::~InputManager()
 dae::Float2 dae::InputManager::GetRStickValues() const
 {
 	return pImpl->GetRStickValues();
+}
+
+dae::Float2 dae::InputManager::GetMousePos() const
+{
+	return pImpl->GetMousePos();
 }
 bool dae::InputManager::ProcessInput()
 {
@@ -245,4 +266,14 @@ void dae::InputManager::SetPlayer(GameObject* pGo, int playerIdx)
 		it->second->SetGameObject(pGo);
 		it++;
 	}
+}
+
+void dae::InputManager::SwitchAimDevice()
+{
+	pImpl->SwitchAimDevice();
+}
+
+bool dae::InputManager::GetAimingWithController() const
+{
+	return pImpl->GetControllerAim();
 }

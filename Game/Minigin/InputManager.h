@@ -58,6 +58,9 @@ namespace dae
 		void AddCommand(ControllerButton button, Command* command, KeyState keyState, GameObject* pGameObject, int playerIdx, unsigned char keyboardKey);
 		void SetPlayer(GameObject* pGo, int playerIdx);
 		Float2 GetRStickValues() const;
+		Float2 GetMousePos() const;
+		bool GetAimingWithController() const;
+		void SwitchAimDevice();
 		void Update();
 	};
 
