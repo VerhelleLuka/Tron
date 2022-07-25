@@ -231,14 +231,14 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 
 	auto& input = InputManager::GetInstance();
 	
-	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, evilTron.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, evilTron.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, evilTron.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, evilTron.get(), playerNr, '5');
+	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, evilTron.get(), playerNr, '4');
+	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, evilTron.get(), playerNr, '6');
+	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, evilTron.get(), playerNr, '8');
 	evilTron->SetTransform(300, 8, 0);
-	input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, evilTron.get(), playerNr);
-	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, evilTron.get(), playerNr);
-	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, evilTron.get(), playerNr);
+	input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, evilTron.get(), playerNr, '-');
+	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, evilTron.get(), playerNr, '+');
+	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, evilTron.get(), playerNr, 'M');
 
 	scene.Add(evilTron);
 }
@@ -311,20 +311,20 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	auto& input = InputManager::GetInstance();
 
 
-	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr);
-	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr);
+	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, tronGo.get(), playerNr, 'S');
+	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr, 'Q');
+	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, tronGo.get(), playerNr, 'D');
+	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr, 'Z');
+	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr, 'M');
 	if (!andHUD)
 	{
-		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr);
+		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr, ' ');
 
 	}
 	else
 	{
-		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr);
-		input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), playerNr);
+		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr, 'X');
+		input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), playerNr, ' ');
 
 	}
 }

@@ -50,9 +50,12 @@ namespace dae
 		InputManager& operator=(InputManager&& other) = delete;
 		bool ProcessInput();
 		bool IsDown(ControllerButton button, int playerIdx) const;
+		bool IsDown(unsigned char key, int playerIdx) const;
 		bool IsReleased(ControllerButton button, int playerIdx) const;
+		bool IsReleased(unsigned char key, int playerIdx) const;
 		bool IsPressed(ControllerButton button, int playerIdx) const;
-		void AddCommand(ControllerButton button, Command* command, KeyState keyState, GameObject* pGameObject, int playerIdx);
+		bool IsPressed(unsigned char key,int playerIdx) const;
+		void AddCommand(ControllerButton button, Command* command, KeyState keyState, GameObject* pGameObject, int playerIdx, unsigned char keyboardKey);
 		void SetPlayer(GameObject* pGo, int playerIdx);
 		Float2 GetRStickValues() const;
 		void Update();

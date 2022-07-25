@@ -11,7 +11,7 @@
 int main(int, char* []) {
 
 	dae::Tron engine;
-	std::cout << "Press A and Z to play sounds (they both do one each)\n";
+	std::cout << "Press P and M to play sounds (they both do one each)\n";
 	engine.Run();
 
 	return 0;
