@@ -91,7 +91,7 @@ public:
 		return false;
 	};
 
-	bool IsPressed(unsigned char key, int playerIdx)
+	bool IsPressed(unsigned char key, int playerIdx) const
 	{
 		unsigned char  currentByte = m_CurrentKeyboardState[playerIdx][(unsigned int)key];
 		unsigned char  previousByte = m_PreviousKeyboardState[playerIdx][(unsigned int)key];
@@ -111,7 +111,7 @@ public:
 		}
 		return false;
 	};
-	bool IsReleased(unsigned char key, int playerIdx)
+	bool IsReleased(unsigned char key, int playerIdx) const
 	{
 		unsigned char  currentByte = m_CurrentKeyboardState[playerIdx][(unsigned int)key];
 		unsigned char  previousByte = m_PreviousKeyboardState[playerIdx][(unsigned int)key];
@@ -127,7 +127,7 @@ public:
 	{
 		return((m_CurrentState[playerIdx].Gamepad.wButtons & int(button)) != 0);
 	}
-	bool IsDown(unsigned char key, int playerIdx)
+	bool IsDown(unsigned char key, int playerIdx) const
 	{
 		unsigned char currentByte = m_CurrentKeyboardState[playerIdx][(unsigned int)key];
 		currentByte >>= 7;
@@ -268,10 +268,6 @@ void dae::InputManager::SetPlayer(GameObject* pGo, int playerIdx)
 	}
 }
 
-void dae::InputManager::SwitchAimDevice()
-{
-	pImpl->SwitchAimDevice();
-}
 
 bool dae::InputManager::GetAimingWithController() const
 {

@@ -238,7 +238,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 	evilTron->SetTransform(300, 8, 0);
 	input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, evilTron.get(), playerNr, '-');
 	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, evilTron.get(), playerNr, '+');
-	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, evilTron.get(), playerNr, 'M');
+	//input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, evilTron.get(), playerNr, 'M');
 
 	scene.Add(evilTron);
 }
@@ -315,7 +315,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr, 'Q');
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, tronGo.get(), playerNr, 'D');
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr, 'Z');
-	input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr, 'W');
+	//input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr, 'W');
 	if (!andHUD)
 	{
 		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr, ' ');

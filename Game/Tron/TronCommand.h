@@ -14,37 +14,42 @@ namespace dae
 			if (m_pGameObject == nullptr)
 				return;
 			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
-				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Shoot();
-		}
-	};
-
-	class Aim final : public Command
-	{
-		void Execute() override
-		{
-			if (m_pGameObject == nullptr)
-				return;
-			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
 			{
 				float angle = 0;
 
-				if(InputManager::GetInstance().GetAimingWithController())
+				if (InputManager::GetInstance().GetAimingWithController())
 					angle = atan2f(InputManager::GetInstance().GetRStickValues(m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->GetPlayerIndex()).y, InputManager::GetInstance().GetRStickValues(m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->GetPlayerIndex()).x);
 
 				else
 				{
-					angle = atan2f((InputManager::GetInstance().GetMousePos().y - m_pGameObject->GetTransform().GetPosition().y) * -1 ,
-						(InputManager::GetInstance().GetMousePos().x -m_pGameObject->GetTransform().GetPosition().x));
+					angle = atan2f((InputManager::GetInstance().GetMousePos().y - m_pGameObject->GetTransform().GetPosition().y) * -1,
+						(InputManager::GetInstance().GetMousePos().x - m_pGameObject->GetTransform().GetPosition().x));
 				}
 
 				Float2 direction{ cosf(angle), sinf(angle) };
 				if (!(abs(direction.x) < 0.0001 && abs(direction.y) < 0.0001))
 					m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->SetAimDir(direction);
-			}
-			
 
+				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->Shoot();
+
+			}
 		}
 	};
+
+	//class Aim final : public Command
+	//{
+	//	void Execute() override
+	//	{
+	//		if (m_pGameObject == nullptr)
+	//			return;
+	//		if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
+	//		{
+
+	//		}
+
+
+	//	}
+	//};
 
 	class Move final : public Command
 	{
