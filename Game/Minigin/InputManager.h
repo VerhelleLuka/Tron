@@ -60,6 +60,8 @@ namespace dae
 		Float2 GetRStickValues(int playerIdx) const;
 		Float2 GetMousePos() const;
 		bool GetAimingWithController() const;
+
+		void ClearCommands();
 		void Update();
 	};
 

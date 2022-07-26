@@ -157,6 +157,11 @@ public:
 		m_UsingController = usingController;
 	}
 
+	void ClearCommands()
+	{
+		m_ButtonCommands->clear();
+	}
+
 };
 dae::InputManager::InputManager()
 	:pImpl(new Impl())
@@ -207,6 +212,11 @@ bool dae::InputManager::IsDown(ControllerButton button, int playerIdx) const
 bool dae::InputManager::IsDown(unsigned char key, int playerIdx) const
 {
 	return pImpl->IsDown(key, playerIdx);
+}
+
+void dae::InputManager::ClearCommands()
+{
+	pImpl->ClearCommands();
 }
 void dae::InputManager::AddCommand(ControllerButton button, Command* commandButton, KeyState keyState, GameObject* gameObject, int playerIdx, unsigned char keyboardKey)
 {

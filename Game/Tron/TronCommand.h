@@ -35,7 +35,13 @@ namespace dae
 			}
 		}
 	};
-
+	class SkipLevel final : public Command
+	{
+		void Execute() override
+		{
+			GameManager::GetInstance().LoadLevel("zfreoipj");
+		}
+	};
 	//class Aim final : public Command
 	//{
 	//	void Execute() override

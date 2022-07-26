@@ -230,7 +230,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 	pRigidBody->SetOffset(Float2{ 0.f,-3.f });
 
 	auto& input = InputManager::GetInstance();
-	
+
 	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, evilTron.get(), playerNr, '5');
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, evilTron.get(), playerNr, '4');
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, evilTron.get(), playerNr, '6');
@@ -238,7 +238,6 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 	evilTron->SetTransform(300, 8, 0);
 	input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, evilTron.get(), playerNr, '-');
 	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, evilTron.get(), playerNr, '+');
-	//input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, evilTron.get(), playerNr, 'M');
 
 	scene.Add(evilTron);
 }
@@ -315,18 +314,15 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr, 'Q');
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, tronGo.get(), playerNr, 'D');
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr, 'Z');
-	//input.AddCommand(ControllerButton::RightThumb, new Aim, KeyState::DOWN, tronGo.get(), playerNr, 'W');
 	if (!andHUD)
 	{
 		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr, ' ');
-
 	}
 	else
 	{
-		//input.AddCommand(ControllerButton::Back, new SwitchAimDevice, KeyState::PRESSED, tronGo.get(), playerNr, 'C');
-		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr, 'X');
 		input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), playerNr, ' ');
-
+		input.AddCommand(ControllerButton::Start, new SkipLevel, KeyState::PRESSED, tronGo.get(), playerNr, 'P');
+		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr, 'X');
 	}
 }
 void dae::Tron::CreateTeleporter(Scene& scene) const
@@ -505,6 +501,7 @@ void dae::Tron::Run()
 
 void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 {
+	InputManager::GetInstance().ClearCommands();
 	auto& newScene = SceneManager::GetInstance().CreateScene(levelName);
 	SceneManager::GetInstance().SetActiveScene(&newScene);
 	Physics::GetInstance().SetSceneNr(0);

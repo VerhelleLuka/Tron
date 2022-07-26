@@ -29,6 +29,14 @@ void dae::PlayerComponent::FixedUpdate(float /*elapsedTime*/)
 	{
 		GameManager::GetInstance().LoadLevel("MainMenu");
 	}
+	if (m_PlayerState == PlayerState::Dead)
+	{
+		if (m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetFrameNr() == m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetNrFrames()-1)
+		{
+			GameManager::GetInstance().LoadLevel("Same");
+		}
+	}
+
 }
 void dae::PlayerComponent::Die()
 {
