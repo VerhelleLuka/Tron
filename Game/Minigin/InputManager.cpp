@@ -152,9 +152,9 @@ public:
 	{
 		return m_UsingController;
 	}
-	void SwitchAimDevice()
+	void SwitchAimDevice(bool usingController)
 	{
-		m_UsingController = !m_UsingController;
+		m_UsingController = usingController;
 	}
 
 };
@@ -229,21 +229,43 @@ void dae::InputManager::Update()
 			switch (p.first.second)
 			{
 			case KeyState::PRESSED:
-				if (IsPressed(p.first.first.first, i) || IsPressed(p.first.first.second, i))
+				if (IsPressed(p.first.first.first, i) )
 				{
+					pImpl->SwitchAimDevice(true);
 					pImpl->GetButtonCommands(i)[p.first]->Execute();
+				}
+				else if (IsPressed(p.first.first.second, i))
+				{
+					pImpl->SwitchAimDevice(false);
+					pImpl->GetButtonCommands(i)[p.first]->Execute();
+
 				}
 				break;
 			case KeyState::RELEASED:
-				if (IsReleased(p.first.first.first, i) || IsReleased(p.first.first.second, i))
+
+				if (IsReleased(p.first.first.first, i))
 				{
+					pImpl->SwitchAimDevice(true);
 					pImpl->GetButtonCommands(i)[p.first]->Execute();
+				}
+				else if (IsReleased(p.first.first.second, i))
+				{
+					pImpl->SwitchAimDevice(false);
+					pImpl->GetButtonCommands(i)[p.first]->Execute();
+
 				}
 				break;
 			case KeyState::DOWN:
-				if (IsDown(p.first.first.first, i) || IsDown(p.first.first.second, i))
+				if (IsDown(p.first.first.first, i))
 				{
+					pImpl->SwitchAimDevice(true);
 					pImpl->GetButtonCommands(i)[p.first]->Execute();
+				}
+				else if (IsDown(p.first.first.second, i))
+				{
+					pImpl->SwitchAimDevice(false);
+					pImpl->GetButtonCommands(i)[p.first]->Execute();
+
 				}
 			case KeyState::NOTHING:
 				if (p.first.first.first == ControllerButton::Nothing)
