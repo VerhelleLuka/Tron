@@ -170,7 +170,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 	const float animationScale = 1.75f;
 	auto evilTron = std::make_shared<GameObject>();
 	evilTron->SetTag("EvilTron");
-	std::shared_ptr<PlayerComponent> player = std::make_shared<PlayerComponent>(true);
+	std::shared_ptr<PlayerComponent> player = std::make_shared<PlayerComponent>(true, playerNr);
 	auto climbAnim = std::make_shared<Animation>(2, 2);
 	climbAnim->SetTexture("Enemies/Sausage_Climb.png");
 	climbAnim->SetScale(animationScale);
@@ -245,7 +245,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 {
 	auto tronGo = std::make_shared<GameObject>();
-	auto playerComponent = std::make_shared<PlayerComponent>(false);
+	auto playerComponent = std::make_shared<PlayerComponent>(false, playerNr);
 	tronGo->SetTag("Player");
 	tronGo->AddComponent(playerComponent, "PlayerComp");
 
@@ -323,7 +323,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	}
 	else
 	{
-		input.AddCommand(ControllerButton::Back, new SwitchAimDevice, KeyState::PRESSED, tronGo.get(), playerNr, 'C');
+		//input.AddCommand(ControllerButton::Back, new SwitchAimDevice, KeyState::PRESSED, tronGo.get(), playerNr, 'C');
 		input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, tronGo.get(), playerNr, 'X');
 		input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, tronGo.get(), playerNr, ' ');
 

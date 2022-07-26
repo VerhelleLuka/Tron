@@ -7,13 +7,13 @@
 #include "TronStructs.h"
 #include "GameManager.h"
 #include "ButtonComponent.h"
-dae::PlayerComponent::PlayerComponent(bool isEvil)
+dae::PlayerComponent::PlayerComponent(bool isEvil, int playerIndex)
 	:m_AimDirection(0.f, 0.f),
 	m_OverlappingButton(false),
 	m_IsEvil(isEvil),
-	m_BulletHits(3)
+	m_BulletHits(3),
+	m_PlayerIndex(playerIndex)
 {
-
 }
 
 dae::PlayerComponent::~PlayerComponent()
@@ -176,6 +176,10 @@ void dae::PlayerComponent::OnOverlap(RigidBodyComponent* other)
 			other->GetParent()->MarkForDelete();
 			--m_BulletHits;
 		}
+	}
+	if (other->GetParent()->GetTag() == "Enemy")
+	{
+		Die();
 	}
 }
 

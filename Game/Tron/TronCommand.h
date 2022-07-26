@@ -29,7 +29,7 @@ namespace dae
 				float angle = 0;
 
 				if(InputManager::GetInstance().GetAimingWithController())
-					angle = atan2f(InputManager::GetInstance().GetRStickValues().y, InputManager::GetInstance().GetRStickValues().x);
+					angle = atan2f(InputManager::GetInstance().GetRStickValues(m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->GetPlayerIndex()).y, InputManager::GetInstance().GetRStickValues(m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->GetPlayerIndex()).x);
 
 				else
 				{
@@ -88,12 +88,12 @@ namespace dae
 				m_pGameObject->GetComponent<PlayerComponent>("PlayerComp")->ButtonPress();
 		}
 	};
-	class SwitchAimDevice final : public Command
-	{
-	public:
-		void Execute() override
-		{
-			InputManager::GetInstance().SwitchAimDevice();
-		}
-	};
+	//class SwitchAimDevice final : public Command
+	//{
+	//public:
+	//	void Execute() override
+	//	{
+	//		InputManager::GetInstance().SwistchAimDevice();
+	//	}
+	//};
 }

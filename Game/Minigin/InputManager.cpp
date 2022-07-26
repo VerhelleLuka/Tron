@@ -137,9 +137,9 @@ public:
 		}
 		return false;
 	}
-	Float2 GetRStickValues()
+	Float2 GetRStickValues(int playerIdx) const
 	{
-		return Float2{ static_cast<float>(m_CurrentState[0].Gamepad.sThumbRX),static_cast<float>(m_CurrentState[0].Gamepad.sThumbRY) };
+		return Float2{ static_cast<float>(m_CurrentState[playerIdx].Gamepad.sThumbRX),static_cast<float>(m_CurrentState[playerIdx].Gamepad.sThumbRY) };
 	}
 	Float2 GetMousePos()
 	{
@@ -169,9 +169,9 @@ dae::InputManager::~InputManager()
 	pImpl = nullptr;
 }
 
-dae::Float2 dae::InputManager::GetRStickValues() const
+dae::Float2 dae::InputManager::GetRStickValues(int playerIdx) const
 {
-	return pImpl->GetRStickValues();
+	return pImpl->GetRStickValues(playerIdx);
 }
 
 dae::Float2 dae::InputManager::GetMousePos() const

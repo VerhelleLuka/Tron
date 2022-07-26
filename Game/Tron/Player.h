@@ -12,7 +12,7 @@ namespace dae
 		virtual void FixedUpdate(float deltaTime) ;
 		virtual void Render() const {};
 
-		PlayerComponent(bool isEvil);
+		PlayerComponent(bool isEvil, int playerIndex);
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
 		PlayerComponent(PlayerComponent&& other) = delete;
@@ -34,6 +34,8 @@ namespace dae
 		void Shoot();
 		void Die();
 		void Move(MovementDirection movDir);
+
+		int GetPlayerIndex() const { return m_PlayerIndex; }
 	private:
 		enum class PlayerState
 		{
@@ -51,5 +53,6 @@ namespace dae
 		bool m_IsEvil;
 
 		int m_BulletHits;
+		int m_PlayerIndex;
 	};
 }
