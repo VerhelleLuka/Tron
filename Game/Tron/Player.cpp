@@ -7,23 +7,38 @@
 #include "TronStructs.h"
 #include "GameManager.h"
 #include "ButtonComponent.h"
+#include "Enemy.h"
 dae::PlayerComponent::PlayerComponent(bool isEvil, int playerIndex)
 	:m_AimDirection(0.f, 0.f),
 	m_OverlappingButton(false),
 	m_IsEvil(isEvil),
 	m_BulletHits(3),
-	m_PlayerIndex(playerIndex)
+	m_PlayerIndex(playerIndex),
+	m_WinAnimationTimer(0.f)
 {
+	GameManager::GetInstance().AddObserver(this);
 }
 
 dae::PlayerComponent::~PlayerComponent()
-{}
+{
+	GameManager::GetInstance().RemoveObserver(this);
+}
 
 void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
 
 }
-void dae::PlayerComponent::FixedUpdate(float /*elapsedTime*/)
+
+void dae::PlayerComponent::OnNotify(EventType event_, std::shared_ptr<EventArgs> /*args*/)
+{
+	if (event_ == EventType::LEVELCLEAR)
+	{
+		Win();
+	}
+}
+
+
+void dae::PlayerComponent::FixedUpdate(float elapsedTime)
 {
 	if (m_BulletHits <= 0)
 	{
@@ -31,10 +46,16 @@ void dae::PlayerComponent::FixedUpdate(float /*elapsedTime*/)
 	}
 	if (m_PlayerState == PlayerState::Dead)
 	{
-		if (m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetFrameNr() == m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetNrFrames()-1)
+		if (m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetFrameNr() == m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetNrFrames() - 1)
 		{
 			GameManager::GetInstance().LoadLevel("Same");
 		}
+	}
+	else if (m_PlayerState == PlayerState::Win)
+	{
+		m_WinAnimationTimer += elapsedTime;
+		if (m_WinAnimationTimer >= m_WinAnimationTime)
+			GameManager::GetInstance().LoadLevel("Next");
 	}
 
 }
@@ -47,7 +68,14 @@ void dae::PlayerComponent::Die()
 	Notify(EventType::STATECHANGED, args);
 }
 
-void dae::PlayerComponent::Move(MovementDirection movDir) 
+void dae::PlayerComponent::Win()
+{
+	m_PlayerState = PlayerState::Win;
+	std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
+	args->name = "Victory";
+	Notify(EventType::STATECHANGED, args);
+}
+void dae::PlayerComponent::Move(MovementDirection movDir)
 {
 	if (m_PlayerState == PlayerState::Dead || m_PlayerState == PlayerState::Win)
 		return;
@@ -83,11 +111,11 @@ void dae::PlayerComponent::Move(MovementDirection movDir)
 	auto& gameManager = GameManager::GetInstance();
 
 
-	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y + offset}) && movDir == MovementDirection::LEFT)
+	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y + offset }) && movDir == MovementDirection::LEFT)
 	{
 		return;
 	}
-	else if (gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y+offset }) && movDir == MovementDirection::RIGHT)
+	else if (gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y + offset }) && movDir == MovementDirection::RIGHT)
 	{
 		return;
 	}
@@ -95,12 +123,10 @@ void dae::PlayerComponent::Move(MovementDirection movDir)
 	{
 		return;
 	}
-	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y + halfHeight + offset ) }) && movDir == MovementDirection::DOWN)
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y + halfHeight + offset) }) && movDir == MovementDirection::DOWN)
 	{
 		return;
 	}
-
-
 
 	int x{ 0 }, y{ 0 };
 
@@ -171,6 +197,8 @@ void dae::PlayerComponent::Shoot()
 
 void dae::PlayerComponent::OnOverlap(RigidBodyComponent* other)
 {
+	if (m_PlayerState == PlayerState::Win || m_PlayerState == PlayerState::Dead)
+		return;
 	if (other->GetParent()->GetTag() == "Button")
 	{
 		other->GetParent()->GetComponent<ButtonComponent>("ButtonComp")->SetOverlapping(true);
@@ -187,7 +215,8 @@ void dae::PlayerComponent::OnOverlap(RigidBodyComponent* other)
 	}
 	if (other->GetParent()->GetTag() == "Enemy")
 	{
-		Die();
+		if (!other->GetParent()->GetComponent<Enemy>("Enemy")->GetDead())
+			Die();
 	}
 }
 

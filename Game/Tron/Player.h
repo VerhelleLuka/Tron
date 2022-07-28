@@ -5,7 +5,7 @@
 #include "Subject.h"
 namespace dae
 {
-	class PlayerComponent final : public BaseComponent, public Subject
+	class PlayerComponent final : public BaseComponent, public Subject, public Observer
 	{
 	public:
 		virtual void Update(float deltaTime);
@@ -37,6 +37,7 @@ namespace dae
 
 		int GetPlayerIndex() const { return m_PlayerIndex; }
 	private:
+		void Win();
 		enum class PlayerState
 		{
 			Dead,
@@ -46,7 +47,7 @@ namespace dae
 		PlayerState m_PlayerState = PlayerState::Alive;
 		void OnOverlap(RigidBodyComponent* other);
 		void OnTriggerExit(RigidBodyComponent* other);
-
+		void OnNotify(EventType event_, std::shared_ptr<EventArgs> args) override;
 		Float2 m_AimDirection;
 		const float m_MoveSpeed = 100.f;
 		bool m_OverlappingButton;
@@ -54,5 +55,8 @@ namespace dae
 
 		int m_BulletHits;
 		int m_PlayerIndex;
+
+		float m_WinAnimationTimer;
+		const float m_WinAnimationTime = 3.f;
 	};
 }

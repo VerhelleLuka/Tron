@@ -94,7 +94,7 @@ void dae::Tron::MakeEnemy(Scene& scene) const
 	enemySprite->AddAnimation(walkRightAnim, "WalkRight");
 	enemySprite->AddAnimation(deathAnim, "Death");
 	enemySprite->AddAnimation(walkLeftAnim, "WalkLeft");
-	enemyGo->AddComponent(enemySprite, "EnemySprite");
+	enemyGo->AddComponent(enemySprite, "Sprite");
 
 	climbAnim->SetScale(animationScale);
 	descendAnim->SetScale(animationScale);
@@ -120,10 +120,11 @@ void dae::Tron::MakeEnemy(Scene& scene) const
 	auto enemy = std::make_shared<Enemy>(enemyType);
 	enemy->SetGameObject(enemyGo.get());
 	enemy->SetOverlapEvent();
+	enemy->AddObserver(enemySprite.get());
 	enemyGo->AddComponent(enemy, "Enemy");
 	enemyGo->SetTransform(296.f, 191.f, 0.f);
 	scene.Add(enemyGo);
-
+	enemy->AddObserver(enemySprite.get());
 	GameManager::GetInstance().AddEnemy();
 }
 
@@ -293,6 +294,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	tronSprite->AddAnimation(tronAnimationVictory, "Victory");
 	tronSprite->AddAnimation(tronAnimationDeath, "Death");
 	tronAnimationDeath->SetFramesSec(0.3f);
+	tronAnimationVictory->SetFramesSec(0.4f);
 	tronSprite->SetGameObject(tronGo.get());
 	tronSprite->SetActiveAnimation("RunRight");
 
@@ -501,7 +503,7 @@ void dae::Tron::Run()
 
 void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 {
-	InputManager::GetInstance().ClearCommands();
+	//InputManager::GetInstance().ClearCommands();
 	auto& newScene = SceneManager::GetInstance().CreateScene(levelName);
 	SceneManager::GetInstance().SetActiveScene(&newScene);
 	Physics::GetInstance().SetSceneNr(0);
@@ -511,8 +513,6 @@ void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 		CreateMenu(newScene);
 		return;
 	}
-
-
 	SceneManager::GetInstance().SetActiveScene(&newScene);
 	Physics::GetInstance().SetSceneNr(0);
 	//CreateMenu(menuScene);

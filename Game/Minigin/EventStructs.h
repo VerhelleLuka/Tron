@@ -5,4 +5,5 @@ enum class EventType
 	GAINEDPOINTS,
 	STATECHANGED,
 	LOADLEVEL,
+	LEVELCLEAR
 };

@@ -2,6 +2,7 @@
 #include "RigidBodyComponent.h"
 #include "BaseComponent.h"
 #include "Scene.h"
+#include "TronStructs.h"
 namespace dae
 {
 	enum class EnemyType
@@ -12,7 +13,7 @@ namespace dae
 	class Enemy final : public BaseComponent, public Subject
 	{
 	public:
-		virtual void Update(float /*deltaTime*/) override {};
+		virtual void Update(float /*deltaTime*/) override ;
 		virtual void FixedUpdate(float /*deltaTime*/) override ;
 		virtual void Render() const {};
 		Enemy(EnemyType enemyType);
@@ -22,7 +23,7 @@ namespace dae
 		Enemy& operator=(const Enemy& other) = delete;
 		Enemy& operator=(Enemy&& other) = delete;
 
-
+		bool GetDead() const { return m_Dead; }
 		void SetOverlapEvent()
 		{
 			auto bindIng = std::bind(&Enemy::OnOverlap, this, std::placeholders::_1);
@@ -31,11 +32,27 @@ namespace dae
 
 
 	private:
+		void Move();
+		bool PlayerInRange() const;
+		void Shoot() const;
+		void ChangeDirection();
+		enum class EnemyState
+		{
+			Dead,
+			Wandering,
+			Targeting
+		};
 		void OnOverlap(RigidBodyComponent* other);
 
 		int m_NrHits;
-		int m_MoveSpeed;
+		float m_MoveSpeed;
 		bool m_Dead;
 
+		EnemyState m_EnemyState;
+		MovementDirection m_CurMovDir;
+		MovementDirection m_PrevMovDir;
+		float m_ChangeDirectionTimer;
+		float m_ChangeDirectionTime;
+		bool m_PlayerInRange;
 	};
 }

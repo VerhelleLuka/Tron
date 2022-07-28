@@ -233,6 +233,7 @@ void dae::InputManager::Update()
 {
 	for (int i{}; i < NrOfPlayers; ++i)
 	{
+		
 		for (const auto& p : pImpl->GetButtonCommands(i))
 		{
 			//std::map<std::pair<ControllerButton, KeyState>, std::unique_ptr<Command>> m_ButtonCommands[NrOfPlayers];

@@ -35,9 +35,9 @@ void dae::GameManager::EnemyKilled()
 	m_NrEnemies--;
 	if (m_NrEnemies <= 0)
 	{
+		std::shared_ptr<EventArgs> emptyArgs = std::make_shared<EventArgs>();
+		Notify(EventType::LEVELCLEAR, emptyArgs);
 		m_NrEnemies = 0;
-		ResetGrid();
-		LoadLevel("Next");
 	}
 }
 
@@ -74,8 +74,9 @@ void dae::GameManager::ResetGrid()
 
 void dae::GameManager::LoadLevel(const std::string& levelName)
 {
+	
 	SceneManager::GetInstance().GetActiveScene().MarkForDestroy();
-
+	m_NrEnemies = 0;
 	ResetGrid();
 	//Physics::GetInstance().DeleteScene(SceneManager::GetInstance().GetActiveSceneNr());
 	if (levelName == "MainMenu")
