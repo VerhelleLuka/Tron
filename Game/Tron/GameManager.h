@@ -9,7 +9,11 @@
 namespace dae
 {
 
-
+	struct GridBlock
+	{
+		bool hasBlock;
+		GameObject* gameObject;
+	};
 	class GameManager : public Singleton<GameManager>, public Subject
 	{
 	public:
@@ -36,11 +40,17 @@ namespace dae
 		int GetPoints() const { return m_Points; }
 
 		void SetGridBlock(int row, int column);
-		bool GetGridBlock(Float2 pos) const;
+		GridBlock& GetGridBlock(Float2 pos) ;
+		void SetGameObjectOnGrid(Float2 pos, GameObject* go);
+		void RemoveGameObjectOnGrid(Float2 pos);
+		void RemoveGameObjectOnGrid(GridBlock* gridBlock);
+		GameObject* GetGameObjectOnGrid(Float2 pos) const;
 		void AddEnemy() { ++m_NrEnemies; }
 		void EnemyKilled();
 		void ResetGrid();
+		float GetCellSize() const { return m_CellSize; }
 	private:
+
 		int m_Points;
 		int m_Lives;
 		int m_NrEnemies;
@@ -50,12 +60,11 @@ namespace dae
 
 		const int m_GridWidth = 26;
 		const int m_GridHeight = 18;
-		bool m_BlockGrid[18][26] = { false };
+		GridBlock m_BlockGrid[18][26] = { false };
 
 		const int m_WidthOffset = 8;
 		const int m_HeightOffset = 0;
 		const float m_CellSize = 24.f;
-
 
 	};
 }

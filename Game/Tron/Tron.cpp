@@ -310,7 +310,7 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	playerComponent->AddObserver(tronSprite.get());
 
 	auto& input = InputManager::GetInstance();
-
+	playerComponent->Initialize();
 
 	input.AddCommand(ControllerButton::DPadDown, new Move(MovementDirection::DOWN), KeyState::DOWN, tronGo.get(), playerNr, 'S');
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, tronGo.get(), playerNr, 'Q');

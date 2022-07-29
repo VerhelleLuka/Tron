@@ -3,6 +3,7 @@
 #include "RigidBodyComponent.h"
 #include "TronStructs.h"
 #include "Subject.h"
+#include "GameManager.h"
 namespace dae
 {
 	class PlayerComponent final : public BaseComponent, public Subject, public Observer
@@ -11,7 +12,7 @@ namespace dae
 		virtual void Update(float deltaTime);
 		virtual void FixedUpdate(float deltaTime) ;
 		virtual void Render() const {};
-
+		void Initialize();
 		PlayerComponent(bool isEvil, int playerIndex);
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
@@ -58,5 +59,12 @@ namespace dae
 
 		float m_WinAnimationTimer;
 		const float m_WinAnimationTime = 3.f;
+
+		GridBlock* m_PrevGridBlock;
+		GridBlock* m_CurGridBlock;
+
+		float m_HalfWidth;
+		float m_HalfHeight;
+		
 	};
 }

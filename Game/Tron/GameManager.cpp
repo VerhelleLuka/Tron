@@ -17,13 +17,17 @@ dae::GameManager::GameManager()
 {
 	for (int i{}; i < m_GridHeight; ++i)
 	{
-		m_BlockGrid[i][0] = true;
-		m_BlockGrid[i][m_GridWidth -1] = true;
+		m_BlockGrid[i][0].hasBlock = true;
+		m_BlockGrid[i][0].gameObject = nullptr;
+		m_BlockGrid[i][m_GridWidth - 1].hasBlock = true;
+		m_BlockGrid[i][m_GridWidth - 1].gameObject = nullptr;
 	}
 	for (int i{}; i < m_GridWidth; ++i)
 	{
-		m_BlockGrid[0][i] = true;
-		m_BlockGrid[m_GridHeight -1][i] = true;
+		m_BlockGrid[0][i].hasBlock = true;
+		m_BlockGrid[0][i].gameObject = nullptr;
+		m_BlockGrid[m_GridHeight - 1][i].hasBlock = true;
+		m_BlockGrid[m_GridHeight - 1][i].gameObject = nullptr;
 	}
 }
 void dae::GameManager::SetTronGame(Tron* burgerTime)
@@ -43,38 +47,76 @@ void dae::GameManager::EnemyKilled()
 
 void dae::GameManager::SetGridBlock(int row, int column)
 {
-	m_BlockGrid[column][row] = true;
+	m_BlockGrid[column][row].hasBlock = true;
 }
-bool dae::GameManager::GetGridBlock(Float2 pos) const
+dae::GridBlock& dae::GameManager::GetGridBlock(Float2 pos) 
 {
 	int column = int((int(pos.x - m_WidthOffset) / m_CellSize));
 	int row = int((int(pos.y + m_HeightOffset) / m_CellSize));
-	//std::cout << column << " " << row << "\n";
-	//std::cout << m_BlockGrid[row][column] << "\n";
 	return m_BlockGrid[row][column];
 }
+
+void dae::GameManager::SetGameObjectOnGrid(Float2 pos, GameObject* go)
+{
+	int column = int((int(pos.x - m_WidthOffset) / m_CellSize));
+	int row = int((int(pos.y + m_HeightOffset) / m_CellSize));
+	m_BlockGrid[row][column].gameObject = go;
+}
+void dae::GameManager::RemoveGameObjectOnGrid(Float2 pos)
+{
+	int column = int((int(pos.x - m_WidthOffset) / m_CellSize));
+	int row = int((int(pos.y + m_HeightOffset) / m_CellSize));
+	m_BlockGrid[row][column].gameObject = nullptr;
+}
+void dae::GameManager::RemoveGameObjectOnGrid(GridBlock* gridBlock)
+{
+	for (int i{ 0 }; i < m_GridHeight; ++i)
+	{
+		for (int j{ 0 }; j < m_GridWidth; ++j)
+		{
+			if (&m_BlockGrid[i][j] == gridBlock)
+				m_BlockGrid[i][j].gameObject = nullptr;
+		}
+	}
+
+}
+dae::GameObject* dae::GameManager::GetGameObjectOnGrid(Float2 pos) const
+{
+	int column = int((int(pos.x - m_WidthOffset) / m_CellSize));
+	int row = int((int(pos.y + m_HeightOffset) / m_CellSize));
+	return m_BlockGrid[row][column].gameObject;
+}
+
 void dae::GameManager::ResetGrid()
 {
 	for (int i{ 0 }; i < m_GridHeight; ++i)
 	{
-		for (int j{ 0 };j <  m_GridWidth; ++j)
-			m_BlockGrid[i][j] = false;
+		for (int j{ 0 }; j < m_GridWidth; ++j)
+		{
+			m_BlockGrid[i][j].hasBlock = false;
+			m_BlockGrid[i][j].gameObject = nullptr;
+
+		}
 	}
 	for (int i{}; i < m_GridHeight; ++i)
 	{
-		m_BlockGrid[i][0] = true;
-		m_BlockGrid[i][m_GridWidth - 1] = true;
+		m_BlockGrid[i][0].hasBlock = true;
+		m_BlockGrid[i][0].gameObject = nullptr;
+		m_BlockGrid[i][m_GridWidth - 1].gameObject = nullptr;
+		m_BlockGrid[i][m_GridWidth - 1].hasBlock = true;
 	}
 	for (int i{}; i < m_GridWidth; ++i)
 	{
-		m_BlockGrid[0][i] = true;
-		m_BlockGrid[m_GridHeight - 1][i] = true;
+		m_BlockGrid[0][i].hasBlock = true;
+		m_BlockGrid[0][i].gameObject = nullptr;
+		m_BlockGrid[m_GridHeight - 1][i].hasBlock = true;
+		m_BlockGrid[m_GridHeight - 1][i].gameObject = nullptr;
 	}
 }
 
 void dae::GameManager::LoadLevel(const std::string& levelName)
 {
-	
+
 	SceneManager::GetInstance().GetActiveScene().MarkForDestroy();
 	m_NrEnemies = 0;
 	ResetGrid();
@@ -118,8 +160,8 @@ void dae::GameManager::AddPoints(int points)
 
 void dae::GameManager::ReduceLife(bool isToRefresh)
 {
-	if(!isToRefresh)
-	--m_Lives;
+	if (!isToRefresh)
+		--m_Lives;
 	std::shared_ptr<EventArgs> emptyArgs = std::make_shared<EventArgs>();
 	Notify(EventType::LOSTLIFE, emptyArgs);
 	if (m_Lives <= 0)

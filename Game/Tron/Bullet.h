@@ -10,7 +10,7 @@ namespace dae
 		virtual void FixedUpdate(float /*deltaTime*/) ;
 		virtual void Render() const {};
 
-		BulletComponent(bool isEvil);
+		BulletComponent(bool isEvil, int nrBounces);
 		virtual ~BulletComponent();
 		BulletComponent(const BulletComponent& other) = delete;
 		BulletComponent(BulletComponent&& other) = delete;

@@ -54,5 +54,13 @@ namespace dae
 		float m_ChangeDirectionTimer;
 		float m_ChangeDirectionTime;
 		bool m_PlayerInRange;
+
+		const float m_ShootDelayTime{ 1.5f };
+		float m_ShootDelayTimer;
+
+		float m_CellSize;
+
+		EnemyType m_EnemyType;
+
 	};
 }

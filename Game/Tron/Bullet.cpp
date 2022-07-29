@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "GameManager.h"
-dae::BulletComponent::BulletComponent(bool isEvil)
-	:m_Bounces(5),
+dae::BulletComponent::BulletComponent(bool isEvil, int nrBounces)
+	:m_Bounces(nrBounces),
 	m_BounceTimer(0.f),
 	m_Bounced(false),
 	m_Destroy(false),
@@ -39,15 +39,14 @@ void dae::BulletComponent::CheckBounce()
 	auto& gameManager = GameManager::GetInstance();
 
 
-	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y }) ||
-		gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y }))
+	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y }).hasBlock ||
+		gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y }).hasBlock)
 	{
 		m_Bounced = true;
 		direction.x *= -1;
 	}
-	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight) }) ||
-		gameManager.GetGridBlock(Float2{ centerPoint.x, (centerPoint.y + halfHeight) }))
-
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight) }).hasBlock ||
+		gameManager.GetGridBlock(Float2{ centerPoint.x, (centerPoint.y + halfHeight) }).hasBlock)
 	{
 		m_Bounced = true;
 		direction.y *= -1;
@@ -79,7 +78,7 @@ void dae::BulletComponent::FixedUpdate(float /*elapsedSec*/)
 
 void dae::BulletComponent::OnOverlap(RigidBodyComponent* other)
 {
-	if (other->GetParent()->GetTag() == "Enemy")
+	if (other->GetParent()->GetTag() == "Enemy" && !m_IsEvil)
 	{
 		m_Destroy = true;
 	}

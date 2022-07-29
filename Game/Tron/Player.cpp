@@ -16,7 +16,7 @@ dae::PlayerComponent::PlayerComponent(bool isEvil, int playerIndex)
 	m_PlayerIndex(playerIndex),
 	m_WinAnimationTimer(0.f)
 {
-	GameManager::GetInstance().AddObserver(this);
+
 }
 
 dae::PlayerComponent::~PlayerComponent()
@@ -24,9 +24,31 @@ dae::PlayerComponent::~PlayerComponent()
 	GameManager::GetInstance().RemoveObserver(this);
 }
 
+void dae::PlayerComponent::Initialize()
+{
+	auto& gameManager = GameManager::GetInstance();
+	GameManager::GetInstance().AddObserver(this);
+	
+	m_CurGridBlock = &GameManager::GetInstance().GetGridBlock(Float2{ m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y });
+	gameManager.SetGameObjectOnGrid(Float2{ m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y }, m_pParent);
+	m_CurGridBlock->gameObject = m_pParent;
+	m_PrevGridBlock = m_CurGridBlock;
+
+	m_HalfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
+	m_HalfHeight = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
+}
+
 void dae::PlayerComponent::Update(float /*elapsedTime*/)
 {
 
+	m_CurGridBlock = &GameManager::GetInstance().GetGridBlock(Float2{ m_pParent->GetTransform().GetPosition().x + m_HalfWidth,m_pParent->GetTransform().GetPosition().y + m_HalfHeight });
+	if (m_CurGridBlock != m_PrevGridBlock)
+	{	
+		GameManager::GetInstance().RemoveGameObjectOnGrid(m_PrevGridBlock);
+		m_PrevGridBlock = m_CurGridBlock;
+		GameManager::GetInstance().SetGameObjectOnGrid(Float2{ m_pParent->GetTransform().GetPosition().x + m_HalfWidth,m_pParent->GetTransform().GetPosition().y + m_HalfHeight}, m_pParent);
+		m_CurGridBlock = &GameManager::GetInstance().GetGridBlock(Float2{ m_pParent->GetTransform().GetPosition().x + m_HalfWidth,m_pParent->GetTransform().GetPosition().y + m_HalfHeight });
+	}
 }
 
 void dae::PlayerComponent::OnNotify(EventType event_, std::shared_ptr<EventArgs> /*args*/)
@@ -103,27 +125,26 @@ void dae::PlayerComponent::Move(MovementDirection movDir)
 	Notify(EventType::STATECHANGED, args);
 	float offset = 24.f;
 	Float2 centerPoint = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
-	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
-	float halfHeight = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
-	centerPoint.x += halfWidth;
-	centerPoint.y -= halfHeight;
+
+	centerPoint.x += m_HalfWidth;
+	centerPoint.y -= m_HalfHeight;
 	Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
 	auto& gameManager = GameManager::GetInstance();
 
 
-	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y + offset }) && movDir == MovementDirection::LEFT)
+	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - m_HalfWidth), centerPoint.y + offset }).hasBlock && movDir == MovementDirection::LEFT)
 	{
 		return;
 	}
-	else if (gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y + offset }) && movDir == MovementDirection::RIGHT)
+	else if (gameManager.GetGridBlock(Float2{ (centerPoint.x + m_HalfWidth), centerPoint.y + offset }).hasBlock && movDir == MovementDirection::RIGHT)
 	{
 		return;
 	}
-	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight + offset) }) && movDir == MovementDirection::UP)
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - m_HalfHeight + offset) }).hasBlock && movDir == MovementDirection::UP)
 	{
 		return;
 	}
-	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y + halfHeight + offset) }) && movDir == MovementDirection::DOWN)
+	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y + m_HalfHeight + offset) }).hasBlock && movDir == MovementDirection::DOWN)
 	{
 		return;
 	}
@@ -185,11 +206,11 @@ void dae::PlayerComponent::Shoot()
 	Float2 aimDir = m_AimDirection;
 	if (abs(m_AimDirection.x) < 0.001f && abs(m_AimDirection.y) < 0.001f)
 	{
-		aimDir.x = 100.f;
+		aimDir.x = 1.f;
 	}
 	pRigidBody->SetDirection(Float2{ aimDir.x * bulletSpeed, aimDir.y * -bulletSpeed });
 
-	auto bulletComp = std::make_shared<BulletComponent>(m_IsEvil);
+	auto bulletComp = std::make_shared<BulletComponent>(m_IsEvil, 5);
 	bullet->AddComponent(bulletComp, "Bullet");
 	bulletComp->SetOverlapEvent();
 	SceneManager::GetInstance().GetActiveScene().Add(bullet);
