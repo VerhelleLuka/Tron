@@ -62,14 +62,11 @@ void dae::PlayerComponent::OnNotify(EventType event_, std::shared_ptr<EventArgs>
 
 void dae::PlayerComponent::FixedUpdate(float elapsedTime)
 {
-	if (m_BulletHits <= 0)
-	{
-		GameManager::GetInstance().LoadLevel("MainMenu");
-	}
 	if (m_PlayerState == PlayerState::Dead)
 	{
 		if (m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetFrameNr() == m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetNrFrames() - 1)
 		{
+			GameManager::GetInstance().ReduceLife(false);
 			GameManager::GetInstance().LoadLevel("Same");
 		}
 	}
@@ -202,7 +199,7 @@ void dae::PlayerComponent::Shoot()
 	pRigidBody->SetVelocityPreservation(true);
 	bullet->AddComponent(pRigidBody, "RigidBody");
 
-	float bulletSpeed = 50.f;
+	float bulletSpeed = 200.f;
 	Float2 aimDir = m_AimDirection;
 	if (abs(m_AimDirection.x) < 0.001f && abs(m_AimDirection.y) < 0.001f)
 	{
@@ -232,13 +229,13 @@ void dae::PlayerComponent::OnOverlap(RigidBodyComponent* other)
 		{
 			other->GetParent()->MarkForDelete();
 			--m_BulletHits;
+			if (m_BulletHits < 0)
+			{
+				Die();
+			}
 		}
 	}
-	if (other->GetParent()->GetTag() == "Enemy")
-	{
-		if (!other->GetParent()->GetComponent<Enemy>("Enemy")->GetDead())
-			Die();
-	}
+
 }
 
 void dae::PlayerComponent::ButtonPress()

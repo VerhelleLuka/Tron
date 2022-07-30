@@ -25,7 +25,6 @@ void dae::Tron::LoadGame()
 	SceneManager::GetInstance().SetActiveScene(&menuScene);
 	Physics::GetInstance().SetSceneNr(0);
 	CreateMenu(menuScene);
-	//ParseLevel(menuScene, 0, "Level1");
 }
 void dae::Tron::CreateHighScoreDisplay(Scene& scene) const
 {
@@ -64,7 +63,7 @@ void dae::Tron::CreateMenu(Scene& scene) const
 	auto titleGo = std::make_shared<GameObject>();
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
-	auto textComp = std::make_shared<TextComponent>("BURGER TIME!!!!!!!", font);
+	auto textComp = std::make_shared<TextComponent>("TRON TIME!!!!!!!", font);
 	titleGo->AddComponent(textComp, "TextComp");
 	titleGo->GetTransform().SetPosition(50, 0, 0);
 	scene.Add(titleGo);
@@ -77,7 +76,7 @@ void dae::Tron::CreateMenu(Scene& scene) const
 
 }
 
-void dae::Tron::MakeEnemy(Scene& scene) const
+void dae::Tron::MakeEnemy(Scene& scene, EnemyType enemyType) const
 {
 	const float animationScale = 1.5f;
 	auto enemyGo = std::make_shared<GameObject>();
@@ -109,13 +108,22 @@ void dae::Tron::MakeEnemy(Scene& scene) const
 	walkRightAnim->SetTexture("Enemies/Sausage_Walk.png");
 	deathAnim->SetTexture("Enemies/Sausage_Kill.png");
 
+	if (enemyType == EnemyType::RECOGNIZER)
+	{
+
+		climbAnim->SetTexture("Enemies/Egg_Climb.png");
+		descendAnim->SetTexture("Enemies/Egg_Descend.png");
+		walkLeftAnim->SetTexture("Enemies/Egg_Walk.png");
+		walkRightAnim->SetTexture("Enemies/Egg_Walk.png");
+		deathAnim->SetTexture("Enemies/Egg_Kill.png");
+	}
 	enemySprite->SetActiveAnimation("WalkRight");
 	auto pRigidBody = std::make_shared<RigidBodyComponent>(enemySprite->GetAnimation().GetScaledWidth(),
 		enemySprite->GetAnimation().GetScaledHeight(),
 		true);
 	enemyGo->AddComponent(pRigidBody, "RigidBody");
 
-	EnemyType enemyType = EnemyType::TANK;
+	//EnemyType enemyType = EnemyType::TANK;
 
 	auto enemy = std::make_shared<Enemy>(enemyType);
 	enemy->SetGameObject(enemyGo.get());
@@ -519,7 +527,8 @@ void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 	ParseLevel(newScene, 0, levelName);
 	CreateTronAndHUD(newScene, 0, true);
 	CreateTeleporter(newScene);
-	MakeEnemy(newScene);
+	MakeEnemy(newScene, EnemyType::TANK);
+	MakeEnemy(newScene, EnemyType::RECOGNIZER);
 
 	if (gameMode == GameMode::COOP)
 	{

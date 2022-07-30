@@ -49,6 +49,7 @@ namespace dae
 		void EnemyKilled();
 		void ResetGrid();
 		float GetCellSize() const { return m_CellSize; }
+		
 	private:
 
 		int m_Points;

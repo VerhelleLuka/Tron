@@ -12,19 +12,19 @@ dae::BulletComponent::BulletComponent(bool isEvil, int nrBounces)
 
 dae::BulletComponent::~BulletComponent() {}
 
-void dae::BulletComponent::Update(float elapsedSec)
+void dae::BulletComponent::Update(float /*elapsedSec*/)
 {
 	if (!m_Bounced)
 		CheckBounce();
-	else
-	{
-		m_BounceTimer += elapsedSec;
-		if (m_BounceTimer >= m_BounceTime)
-		{
-			m_BounceTimer = 0;
-			m_Bounced = false;
-		}
-	}
+	//else
+	//{
+	//	m_BounceTimer += elapsedSec;
+	//	if (m_BounceTimer >= m_BounceTime)
+	//	{
+	//		m_BounceTimer = 0;
+	//		m_Bounced = false;
+	//	}
+	//}
 
 }
 
@@ -36,17 +36,15 @@ void dae::BulletComponent::CheckBounce()
 	centerPoint.x += halfWidth;
 	centerPoint.y += halfHeight;
 	Float2 direction = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetDirection();
-	auto& gameManager = GameManager::GetInstance();
 
-
-	if (gameManager.GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y }).hasBlock ||
-		gameManager.GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y }).hasBlock)
+	if (GameManager::GetInstance().GetGridBlock(Float2{ (centerPoint.x - halfWidth), centerPoint.y }).hasBlock ||
+		GameManager::GetInstance().GetGridBlock(Float2{ (centerPoint.x + halfWidth), centerPoint.y }).hasBlock)
 	{
 		m_Bounced = true;
 		direction.x *= -1;
 	}
-	else if (gameManager.GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight) }).hasBlock ||
-		gameManager.GetGridBlock(Float2{ centerPoint.x, (centerPoint.y + halfHeight) }).hasBlock)
+	else if (GameManager::GetInstance().GetGridBlock(Float2{ centerPoint.x , (centerPoint.y - halfHeight) }).hasBlock ||
+		GameManager::GetInstance().GetGridBlock(Float2{ centerPoint.x, (centerPoint.y + halfHeight) }).hasBlock)
 	{
 		m_Bounced = true;
 		direction.y *= -1;

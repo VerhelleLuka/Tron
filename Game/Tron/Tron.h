@@ -7,6 +7,7 @@ namespace dae
 
 	class Scene;
 	struct Block;
+	enum class EnemyType;
 	class Tron
 	{
 	public:
@@ -21,7 +22,7 @@ namespace dae
 		void CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const;
 		void CreateTeleporter(Scene& scene) const;
 		void CreateEvilTron( Scene& scene, int playerNr) const;
-		void MakeEnemy(Scene& scene) const;
+		void MakeEnemy(Scene& scene, EnemyType enemyType) const;
 		void CreateMenu(Scene& scene) const;
 		void CreateBlocks(Scene& scene, int sceneNr, std::vector<Block>& blocks) const;
 		void CreateFixedBlocks(Scene& scene, int sceneNr) const;

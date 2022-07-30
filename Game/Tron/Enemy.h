@@ -17,13 +17,12 @@ namespace dae
 		virtual void FixedUpdate(float /*deltaTime*/) override ;
 		virtual void Render() const {};
 		Enemy(EnemyType enemyType);
-		virtual ~Enemy() {};
+		virtual ~Enemy();
 		Enemy(const Enemy& other) = delete;
 		Enemy(Enemy&& other) = delete;
 		Enemy& operator=(const Enemy& other) = delete;
 		Enemy& operator=(Enemy&& other) = delete;
 
-		bool GetDead() const { return m_Dead; }
 		void SetOverlapEvent()
 		{
 			auto bindIng = std::bind(&Enemy::OnOverlap, this, std::placeholders::_1);
@@ -46,7 +45,6 @@ namespace dae
 
 		int m_NrHits;
 		float m_MoveSpeed;
-		bool m_Dead;
 
 		EnemyState m_EnemyState;
 		MovementDirection m_CurMovDir;

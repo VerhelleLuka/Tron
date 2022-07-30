@@ -4,9 +4,9 @@
 #include "Bullet.h"
 #include <SpriteComponent.h>
 #include "Animation.h"
+#include "Player.h"
 dae::Enemy::Enemy(EnemyType enemyType)
 	:m_NrHits(3),
-	m_Dead(false),
 	m_CurMovDir(MovementDirection::DOWN),
 	m_PrevMovDir(MovementDirection::DOWN),
 	m_PlayerInRange(false),
@@ -18,14 +18,15 @@ dae::Enemy::Enemy(EnemyType enemyType)
 {
 	m_MoveSpeed = 66.f;
 	if (enemyType == EnemyType::RECOGNIZER)
-		m_MoveSpeed = 200.f;
-
+		m_MoveSpeed = 122.f;
+	
 	m_CellSize = GameManager::GetInstance().GetCellSize();
+
 }
 
 void dae::Enemy::FixedUpdate(float /* elapsedSec*/)
 {
-	if (m_Dead)
+	if (m_EnemyState == EnemyState::Dead)
 	{
 		if (m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetFrameNr() == m_pParent->GetComponent<SpriteComponent>("Sprite")->GetAnimation().GetNrFrames() - 1)
 		{
@@ -34,9 +35,13 @@ void dae::Enemy::FixedUpdate(float /* elapsedSec*/)
 		}
 	}
 }
+
+dae::Enemy::~Enemy()
+{
+}
 void dae::Enemy::Update(float elapsedSec)
 {
-
+	
 	if (m_EnemyState == EnemyState::Dead)
 		return;
 	Move();
@@ -260,7 +265,7 @@ void dae::Enemy::Shoot() const
 	pRigidBody->SetVelocityPreservation(true);
 	bullet->AddComponent(pRigidBody, "RigidBody");
 
-	float bulletSpeed = 50.f;
+	float bulletSpeed = 150.f;
 	Float2 aimDir{0.f,0.f};
 	switch (m_CurMovDir)
 	{
@@ -294,15 +299,26 @@ void dae::Enemy::OnOverlap(RigidBodyComponent* other)
 {
 	if (other->GetParent()->GetTag() == "Bullet")
 	{
-		if (other->GetParent()->GetComponent<BulletComponent>("Bullet")->GetEvil())
+ 		if (other->GetParent()->GetComponent<BulletComponent>("Bullet")->GetEvil())
 			return;
 		m_NrHits--;
 		if (m_NrHits < -1)
 		{
-			m_Dead = true;
 			std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
 			args->name = "Death";
 			Notify(EventType::STATECHANGED, args);
+			m_EnemyState = EnemyState::Dead;
+			if (m_EnemyType == EnemyType::RECOGNIZER)
+			{
+				GameManager::GetInstance().AddPoints(150);
+			}
+			GameManager::GetInstance().AddPoints(100);
+
 		}
+	}
+
+	if (other->GetParent()->GetTag() == "Player" && m_EnemyState != EnemyState::Dead)
+	{
+		other->GetParent()->GetComponent<PlayerComponent>("PlayerComp")->Die();
 	}
 }
