@@ -178,7 +178,9 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 {
 	const float animationScale = 1.75f;
 	auto evilTron = std::make_shared<GameObject>();
-	evilTron->SetTag("EvilTron");
+	evilTron->SetTag("EvilPlayer");
+	evilTron->SetTransform(300.f, 20.f, 0);
+
 	std::shared_ptr<PlayerComponent> player = std::make_shared<PlayerComponent>(true, playerNr);
 	auto climbAnim = std::make_shared<Animation>(2, 2);
 	climbAnim->SetTexture("Enemies/Sausage_Climb.png");
@@ -244,9 +246,9 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 	input.AddCommand(ControllerButton::DPadLeft, new Move(MovementDirection::LEFT), KeyState::DOWN, evilTron.get(), playerNr, '4');
 	input.AddCommand(ControllerButton::DPadRight, new Move(MovementDirection::RIGHT), KeyState::DOWN, evilTron.get(), playerNr, '6');
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, evilTron.get(), playerNr, '8');
-	evilTron->SetTransform(300, 8, 0);
 	input.AddCommand(ControllerButton::ButtonX, new Die, KeyState::PRESSED, evilTron.get(), playerNr, '-');
 	input.AddCommand(ControllerButton::LeftShoulder, new Shoot, KeyState::PRESSED, evilTron.get(), playerNr, '+');
+	player->Initialize();
 
 	scene.Add(evilTron);
 }

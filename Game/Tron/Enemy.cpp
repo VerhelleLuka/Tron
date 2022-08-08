@@ -14,7 +14,8 @@ dae::Enemy::Enemy(EnemyType enemyType)
 	m_ChangeDirectionTimer(0.f),
 	m_EnemyState(EnemyState::Wandering),
 	m_ShootDelayTimer(m_ShootDelayTime),
-	m_EnemyType(enemyType)
+	m_EnemyType(enemyType),
+	m_LookDir(0.f, 0.f)
 {
 	m_MoveSpeed = 66.f;
 	if (enemyType == EnemyType::RECOGNIZER)
@@ -78,12 +79,43 @@ void dae::Enemy::Update(float elapsedSec)
 
 	}
 }
+void dae::Enemy::ChangeMoveDir()
+{
+	std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
+
+	switch (m_CurMovDir)
+	{
+
+	case MovementDirection::RIGHT:
+		args->name = "WalkRight";
+		m_LookDir = { 1.f, 0.f };
+		break;
+	case MovementDirection::LEFT:
+		args->name = "WalkLeft";
+		m_LookDir = { -1.f, 0.f };
+
+		break;
+	case MovementDirection::UP:
+		args->name = "Climb";
+		m_LookDir = { 0.f, -1.f };
+
+		break;
+	case MovementDirection::DOWN:
+		args->name = "Descend";
+		m_LookDir = { 0.f, 1.f };
+		break;
+	default:
+		args->name = "Idle";
+		m_LookDir = { 1.f, 0.f };
+		break;
+	}
+	Notify(EventType::STATECHANGED, args);
+}
 void dae::Enemy::ChangeDirection()
 {
 	if (m_EnemyState == EnemyState::Dead)
 		return;
 
-	std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
 
 	m_PrevMovDir = m_CurMovDir;
 
@@ -93,27 +125,7 @@ void dae::Enemy::ChangeDirection()
 
 		m_CurMovDir = static_cast<MovementDirection>(newMovDir);
 	}
-
-	switch (m_CurMovDir)
-	{
-
-	case MovementDirection::RIGHT:
-		args->name = "WalkRight";
-		break;
-	case MovementDirection::LEFT:
-		args->name = "WalkLeft";
-		break;
-	case MovementDirection::UP:
-		args->name = "Climb";
-		break;
-	case MovementDirection::DOWN:
-		args->name = "Descend";
-		break;
-	default:
-		args->name = "Idle";
-		break;
-	}
-	Notify(EventType::STATECHANGED, args);
+	ChangeMoveDir();
 
 }
 void dae::Enemy::Move()
@@ -121,27 +133,9 @@ void dae::Enemy::Move()
 	if (m_EnemyState == EnemyState::Dead)
 		return;
 
-	std::shared_ptr<SpriteEventArgs> args = std::make_shared<SpriteEventArgs>();
-	switch (m_CurMovDir)
-	{
 
-	case MovementDirection::RIGHT:
-		args->name = "WalkRight";
-		break;
-	case MovementDirection::LEFT:
-		args->name = "WalkLeft";
-		break;
-	case MovementDirection::UP:
-		args->name = "Climb";
-		break;
-	case MovementDirection::DOWN:
-		args->name = "Descend";
-		break;
-	default:
-		args->name = "Idle";
-		break;
-	}
-	Notify(EventType::STATECHANGED, args);
+	ChangeMoveDir();
+
 	float offset = 24.f;
 	Float2 centerPoint = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
 	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
@@ -173,56 +167,20 @@ void dae::Enemy::Move()
 		return;
 	}
 
-	int x{ 0 }, y{ 0 };
 
-	switch (m_CurMovDir)
-	{
-	case MovementDirection::DOWN:
-		y = 1;
-		break;
-	case MovementDirection::LEFT:
-		x = -1;
-		break;
-	case MovementDirection::RIGHT:
-		x = 1;
-		break;
-	case MovementDirection::UP:
-		y = -1;
-		break;
-	default:
-		break;
-	}
 
-	m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetDirection(Float2{ m_MoveSpeed * x, m_MoveSpeed * y });
+	m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->SetDirection(Float2{ m_MoveSpeed * m_LookDir.x, m_MoveSpeed * m_LookDir.y });
 }
 
 bool dae::Enemy::PlayerInRange() const
 {
-	int x{ 0 }, y{ 0 };
 
-	switch (m_CurMovDir)
-	{
-	case MovementDirection::DOWN:
-		y = 1;
-		break;
-	case MovementDirection::LEFT:
-		x = -1;
-		break;
-	case MovementDirection::RIGHT:
-		x = 1;
-		break;
-	case MovementDirection::UP:
-		y = -1;
-		break;
-	default:
-		break;
-	}
 	Float2 pos = { m_pParent->GetTransform().GetPosition().x,m_pParent->GetTransform().GetPosition().y };
 	float halfWidth = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetWidth() / 2.f;
 	float halfHeight = m_pParent->GetComponent<RigidBodyComponent>("RigidBody")->GetHeight() / 2.f;
 	for (size_t i{}; i < 25; ++i)
 	{
-		GridBlock gridBlock = GameManager::GetInstance().GetGridBlock(Float2{ pos.x + halfWidth + (m_CellSize * i * x), pos.y + halfHeight + (m_CellSize * i * y) });
+		GridBlock gridBlock = GameManager::GetInstance().GetGridBlock(Float2{ pos.x + halfWidth + (m_CellSize * i * m_LookDir.x), pos.y + halfHeight + (m_CellSize * i * m_LookDir.y) });
 
 		if (gridBlock.gameObject != nullptr)
 		{

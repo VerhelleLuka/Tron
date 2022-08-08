@@ -46,6 +46,7 @@ void dae::PlayerComponent::Update(float /*elapsedTime*/)
 	{	
 		GameManager::GetInstance().RemoveGameObjectOnGrid(m_PrevGridBlock);
 		m_PrevGridBlock = m_CurGridBlock;
+
 		GameManager::GetInstance().SetGameObjectOnGrid(Float2{ m_pParent->GetTransform().GetPosition().x + m_HalfWidth,m_pParent->GetTransform().GetPosition().y + m_HalfHeight}, m_pParent);
 		m_CurGridBlock = &GameManager::GetInstance().GetGridBlock(Float2{ m_pParent->GetTransform().GetPosition().x + m_HalfWidth,m_pParent->GetTransform().GetPosition().y + m_HalfHeight });
 	}
