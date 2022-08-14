@@ -530,6 +530,7 @@ void dae::Tron::LoadLevel(GameMode gameMode, const std::string& levelName) const
 	CreateTronAndHUD(newScene, 0, true);
 	CreateTeleporter(newScene);
 	MakeEnemy(newScene, EnemyType::TANK);
+	MakeEnemy(newScene, EnemyType::TANK);
 	MakeEnemy(newScene, EnemyType::RECOGNIZER);
 
 	if (gameMode == GameMode::COOP)
