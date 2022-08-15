@@ -11,7 +11,7 @@ namespace dae
 	public:
 		void Execute() override
 		{
-			if (m_pGameObject == nullptr)
+			if (m_pGameObject == nullptr || SceneManager::GetInstance().GetActiveSceneName() == "MainMenu")
 				return;
 			if (m_pGameObject->GetComponent<PlayerComponent>("PlayerComp"))
 			{

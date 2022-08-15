@@ -254,6 +254,7 @@ void dae::Tron::CreateEvilTron(Scene& scene, int playerNr) const
 }
 void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 {
+	//InputManager::GetInstance().ClearCommands();
 	auto tronGo = std::make_shared<GameObject>();
 	auto playerComponent = std::make_shared<PlayerComponent>(false, playerNr);
 	tronGo->SetTag("Player");

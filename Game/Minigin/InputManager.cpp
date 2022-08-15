@@ -160,6 +160,7 @@ public:
 	void ClearCommands()
 	{
 		m_ButtonCommands->clear();
+		
 	}
 
 };
@@ -225,6 +226,7 @@ void dae::InputManager::AddCommand(ControllerButton button, Command* commandButt
 	key.first.second = keyboardKey;
 	key.second = keyState;
 
+	pImpl->GetButtonCommands(playerIdx).erase(key);
 	pImpl->GetButtonCommands(playerIdx)[key].reset(commandButton);
 	pImpl->GetButtonCommands(playerIdx)[key]->SetGameObject(gameObject);
 
