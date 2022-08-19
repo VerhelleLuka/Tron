@@ -333,7 +333,6 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	if (!andHUD)
 	{
 		tronGo->SetTransform(250.f, 145.f, 0.f);
-
 		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr, 'A');
 	}
 	else
