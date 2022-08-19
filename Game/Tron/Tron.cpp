@@ -32,16 +32,19 @@ void dae::Tron::CreateHighScoreDisplay(Scene& scene) const
 
 	std::ifstream file("../Data/Menu/HighScores.txt");
 	std::string sCommand;
-	std::vector<int> highScores;
+	std::vector<int> highScores{};
 	if (file)
 	{
-		while (!file.eof())
+		do
 		{
 			file >> sCommand;
-			highScores.push_back(std::stoi(sCommand));
-		}
+			int number = std::stoi(sCommand);
+			highScores.push_back(number);
+		} while (!file.eof());
+
 		std::sort(highScores.begin(), highScores.end(), std::greater<int>());
 	}
+	highScores.erase(highScores.begin());
 	Float2 position{ 400, 50 };
 	for (size_t i{}; i < highScores.size(); ++i)
 	{
@@ -329,7 +332,9 @@ void dae::Tron::CreateTronAndHUD(Scene& scene, int playerNr, bool andHUD) const
 	input.AddCommand(ControllerButton::DPadUp, new Move(MovementDirection::UP), KeyState::DOWN, tronGo.get(), playerNr, 'Z');
 	if (!andHUD)
 	{
-		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr, ' ');
+		tronGo->SetTransform(250.f, 145.f, 0.f);
+
+		input.AddCommand(ControllerButton::ButtonA, new Select, KeyState::PRESSED, tronGo.get(), playerNr, 'A');
 	}
 	else
 	{
